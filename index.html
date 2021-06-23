@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Suggestify</title>
+		<style>
+			body,
+			html {
+				overflow: hidden;
+				margin: 0;
+				padding: 0;
+			}
+			#app {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				width: 100vw;
+				height: 100vh;
+				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+					'Open Sans', 'Helvetica Neue', sans-serif;
+			}
+			h1 {
+				font-weight: 100;
+			}
+		</style>
+	</head>
+	<body>
+		<main id="app">
+			<h1>Search with autocomplete</h1>
+
+			<section id="suggestify" class="suggestify">
+				<div class="suggestify-search">
+					<input placeholder="Search..." aria-label="Search for ..." />
+					<button type="submit">
+						<i class="suggestify-icon"></i>
+						<span>Search</span>
+					</button>
+				</div>
+				<ul class="suggestify-result"></ul>
+			</section>
+		</main>
+		<script type="module" src="/src/main.ts"></script>
+	</body>
+</html>

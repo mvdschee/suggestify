@@ -1,0 +1,11 @@
+{
+	"name": "api",
+	"version": "1.0.0",
+	"main": "search.js",
+	"author": "Max van der Schee",
+	"license": "MIT",
+	"private": true,
+	"dependencies": {
+		"lambda-rate-limiter": "^3.0.0"
+	}
+}
