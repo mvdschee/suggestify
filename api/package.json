@@ -1,7 +1,7 @@
 {
 	"name": "api",
 	"version": "1.0.0",
-	"main": "search.js",
+	"main": "./search.js",
 	"author": "Max van der Schee",
 	"license": "MIT",
 	"private": true,
