@@ -1,4 +1,4 @@
-const { jobs } = require('./mock.json');
+const mock = require('./mock.json');
 const rateLimit = require('lambda-rate-limiter')({
 	interval: 1000 * 60, // Our rate-limit interval, 1 minute
 	uniqueTokenPerInterval: 500,
@@ -10,10 +10,7 @@ const MIN_DISTANCE = 3;
 module.exports = async (req, res) => {
 	const { headers } = req;
 	const body = JSON.parse(req.body);
-
-	console.log('search', body.search);
-
-	const search = body.search ? sanitize(body.search) : null;
+	const search = body.search ? sanitize(body.search.trim()) : 'empty';
 
 	try {
 		await rateLimit.check(50, headers['x-real-ip']);
@@ -21,25 +18,25 @@ module.exports = async (req, res) => {
 		res.status(429).send('Too Many Requests');
 	}
 
-	if (!search) res.status(200).json(suggestion);
-
-	try {
-		const result = await searchHandler(search);
-		res.status(200).json(result);
-	} catch (error) {
-		res.status(500).send('Internal server Error');
-	}
+	if (search === 'empty') res.status(200).json(suggestion);
+	else
+		try {
+			const result = searchHandler(search);
+			res.status(200).json(result);
+		} catch (error) {
+			res.status(500).send('Internal server Error');
+		}
 };
 
 function searchHandler(event) {
 	const searchText = event.toLowerCase();
 
-	const filteredFruits = jobs.filter((job) => {
+	const filteredResults = mock.jobs.filter((job) => {
 		const distance = levenshtein(job.toLowerCase(), searchText);
 		return distance <= MIN_DISTANCE;
 	});
 
-	return filteredFruits;
+	return filteredResults;
 }
 
 function sanitize(string) {
@@ -68,15 +65,15 @@ function levenshtein(a, b) {
 		b = tmp;
 	}
 
-	const la = a.length;
-	const lb = b.length;
+	let la = a.length;
+	let lb = b.length;
 
 	while (la > 0 && a.charCodeAt(la - 1) === b.charCodeAt(lb - 1)) {
 		la--;
 		lb--;
 	}
 
-	const offset = 0;
+	let offset = 0;
 
 	while (offset < la && a.charCodeAt(offset) === b.charCodeAt(offset)) {
 		offset++;
@@ -112,7 +109,7 @@ function levenshtein(a, b) {
 
 	const len = vector.length - 1;
 
-	for (; x < lb - 3; ) {
+	for (let x = 0; x < lb - 3; ) {
 		bx0 = b.charCodeAt(offset + (d0 = x));
 		bx1 = b.charCodeAt(offset + (d1 = x + 1));
 		bx2 = b.charCodeAt(offset + (d2 = x + 2));
@@ -133,7 +130,7 @@ function levenshtein(a, b) {
 		}
 	}
 
-	for (; x < lb; ) {
+	for (let x = 0; x < lb; ) {
 		bx0 = b.charCodeAt(offset + (d0 = x));
 		dd = ++x;
 		for (y = 0; y < len; y += 2) {

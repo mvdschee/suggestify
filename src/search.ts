@@ -6,7 +6,7 @@ interface Options {
 }
 
 interface Cache {
-	[key: string]: Object;
+	[key: string]: any;
 }
 
 class Search {
@@ -16,7 +16,8 @@ class Search {
 	private input?: Element | null;
 	private result?: Element | null;
 	private cache: Cache = {};
-	private timeout = 400;
+	private timeout = 100;
+	private initResults = false;
 
 	constructor(selector: string | Element, options: Options) {
 		this.root = typeof selector === 'string' ? document.querySelector(selector) : selector;
@@ -31,10 +32,7 @@ class Search {
 	initialize(): void {
 		// set icon
 		const i = document.createElement('i');
-		i.classList.add('suggestify-icon');
 		this.root?.insertBefore(i, this.root?.childNodes[0]);
-
-		console.log(this.url);
 
 		if (this.input && this.result) {
 			this.input.setAttribute('role', 'combobox');
@@ -51,22 +49,46 @@ class Search {
 
 			this.input.setAttribute('aria-owns', this.result.id);
 			this.input.addEventListener('input', this.searchHandler, { passive: true });
+			this.input.addEventListener('click', this.inputSelected, { passive: true });
 		}
 	}
+
+	inputSelected = (e: any): void => {
+		const text = e.target.value;
+
+		if (!text && !this.initResults) {
+			this.request(null)
+				.then((response) => {
+					this.DeleteResultList();
+					this.createResultList(response);
+				})
+				.catch((e) => {
+					console.error(e);
+				});
+
+			this.initResults = true;
+		}
+	};
 
 	searchHandler = (e: any): void => {
 		const text = e.target.value;
 
 		if (this.timeout) clearTimeout(this.timeout);
 		this.timeout = setTimeout(() => {
-			this.request(sanitize(text)).then((response) => {
-				console.log(response);
-			});
+			this.request(sanitize(text))
+				.then((response) => {
+					this.DeleteResultList();
+					this.createResultList(response);
+				})
+				.catch((e) => {
+					console.error(e);
+				});
 			// update timeout time too
-		}, 400);
+		}, 100);
 	};
 
-	request = (search: string | null): Promise<any> => {
+	request(search: string | null): Promise<any> {
+		console.time('request');
 		const cacheKey = JSON.stringify(search);
 		if (this.cache[cacheKey]) return Promise.resolve(this.cache[cacheKey]);
 
@@ -77,11 +99,42 @@ class Search {
 			}),
 		};
 
-		const result = fetch(this.engine, options).then((response) => response.json());
-		this.cache[cacheKey] = result;
+		const response = fetch(this.engine, options).then((response) => response.json());
+		this.cache[cacheKey] = response;
 
-		return result;
-	};
+		console.timeEnd('request');
+		return response;
+	}
+
+	createResultList(results: string[]) {
+		if (this.result && results.length) {
+			this.root?.classList.add('active');
+
+			for (let i = 0; i < results.length; i++) {
+				const result = results[i];
+				const li = document.createElement('li');
+				const a = document.createElement('a');
+
+				a.className = 'suggestify-link';
+				a.setAttribute('aria-label', `Zoeken op: ${result}`);
+				a.href = `${this.url}${result}`;
+				a.textContent = result;
+
+				li.appendChild(a);
+				this.result.appendChild(li);
+			}
+		}
+	}
+
+	DeleteResultList() {
+		if (this.result) {
+			this.root?.classList.remove('active');
+
+			Array.from(this.result.children).forEach((element: Element) => {
+				this.result!.removeChild(element);
+			});
+		}
+	}
 }
 
 function sanitize(string: string) {
