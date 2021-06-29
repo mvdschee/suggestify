@@ -1,5 +1,4 @@
-import '../lib/style.scss';
-import Suggestify from '../lib/suggestify';
+import Suggestify from './suggestify';
 
 new Suggestify('#suggestify', {
 	engine: '/api/search',
