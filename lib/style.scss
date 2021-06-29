@@ -66,7 +66,8 @@
 		box-sizing: border-box;
 		margin: 0;
 		padding: 0;
-		overflow: hidden;
+		overflow: hidden auto;
+		max-height: 312px;
 		list-style: none;
 		position: absolute;
 		width: 100%;
@@ -81,6 +82,13 @@
 			}
 		}
 	}
+}
+
+.suggestify-banner {
+	padding: 11px 20px;
+	background-color: rgba(144, 144, 211, 0.2);
+	color: rgb(104, 104, 155);
+	font-size: 14px;
 }
 
 .suggestify-link {

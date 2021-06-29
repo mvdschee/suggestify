@@ -1,7 +1,6 @@
-import './style.scss';
-import Search from './search';
+import Search from '../dist/suggestify.es';
 
-new Search('#suggestify', {
+const search = new Search('#suggestify', {
 	engine: '/api/search',
 	url: 'https://google.com/search?q=',
 });

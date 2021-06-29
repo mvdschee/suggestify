@@ -1,12 +1,25 @@
 import { nanoid } from 'nanoid';
+import './style.scss';
 
 interface Options {
 	url?: string;
 	engine?: string;
+	translations?: Translations;
+}
+
+interface Translations {
+	suggestions: string;
+	linkLabel: string;
+	results: string;
 }
 
 interface Cache {
 	[key: string]: any;
+}
+
+interface Result {
+	type: 'results' | 'suggestions';
+	items: string[];
 }
 
 class Search {
@@ -14,27 +27,30 @@ class Search {
 	private engine: string;
 	private url: string;
 	private input?: Element | null;
-	private result?: Element | null;
+	private list?: Element | null;
+	private translations: Translations | null;
 	private cache: Cache = {};
-	private timeout = 100;
-	private initResults = false;
+	private timeout = 200;
 
 	constructor(selector: string | Element, options: Options) {
 		this.root = typeof selector === 'string' ? document.querySelector(selector) : selector;
-		this.url = options.url || '/search?q=';
+		this.url = options.url || '?q=';
+		this.translations = options.translations || null;
 		this.engine = options.engine || '/api/search';
 		this.input = this.root?.querySelector('input');
-		this.result = this.root?.querySelector('ul');
+		this.list = this.root?.querySelector('ul');
 
 		this.initialize();
 	}
 
 	initialize(): void {
-		// set icon
 		const i = document.createElement('i');
+		i.setAttribute('role', 'presentation');
+		i.setAttribute('focusable', 'false');
+		i.setAttribute('aria-hidden', 'true');
 		this.root?.insertBefore(i, this.root?.childNodes[0]);
 
-		if (this.input && this.result) {
+		if (this.input && this.list) {
 			this.input.setAttribute('role', 'combobox');
 			this.input.setAttribute('autocomplete', 'off');
 			this.input.setAttribute('autocapitalize', 'off');
@@ -44,38 +60,43 @@ class Search {
 			this.input.setAttribute('aria-haspopup', 'listbox');
 			this.input.setAttribute('aria-expanded', 'false');
 
-			this.result.setAttribute('role', 'listbox');
-			if (!this.result.id) this.result.id = `suggestify-result-${nanoid(5)}`;
+			this.list.setAttribute('role', 'listbox');
+			if (!this.list.id) this.list.id = `suggestify-result-${nanoid(5)}`;
 
-			this.input.setAttribute('aria-owns', this.result.id);
+			this.input.setAttribute('aria-owns', this.list.id);
 			this.input.addEventListener('input', this.searchHandler, { passive: true });
 			this.input.addEventListener('click', this.inputSelected, { passive: true });
+			this.input.addEventListener('mouseover', this.autoSuggest, { once: true, passive: true });
 		}
 	}
 
+	autoSuggest = () => {
+		this.request(null).catch((e) => {
+			console.error(e);
+		});
+	};
+
 	inputSelected = (e: any): void => {
-		const text = e.target.value;
+		const input = e.target.value;
+		const searchInput = input ? sanitize(input) : null;
 
-		if (!text && !this.initResults) {
-			this.request(null)
-				.then((response) => {
-					this.DeleteResultList();
-					this.createResultList(response);
-				})
-				.catch((e) => {
-					console.error(e);
-				});
-
-			this.initResults = true;
-		}
+		this.request(searchInput)
+			.then((response) => {
+				this.DeleteResultList();
+				this.createResultList(response);
+			})
+			.catch((e) => {
+				console.error(e);
+			});
 	};
 
 	searchHandler = (e: any): void => {
-		const text = e.target.value;
+		const input = e.target.value;
+		const searchInput = input ? sanitize(input) : null;
 
 		if (this.timeout) clearTimeout(this.timeout);
 		this.timeout = setTimeout(() => {
-			this.request(sanitize(text))
+			this.request(searchInput)
 				.then((response) => {
 					this.DeleteResultList();
 					this.createResultList(response);
@@ -84,7 +105,7 @@ class Search {
 					console.error(e);
 				});
 			// update timeout time too
-		}, 100);
+		}, 200);
 	};
 
 	request(search: string | null): Promise<any> {
@@ -106,32 +127,49 @@ class Search {
 		return response;
 	}
 
-	createResultList(results: string[]) {
-		if (this.result && results.length) {
-			this.root?.classList.add('active');
+	createResultList(result: Result) {
+		this.root?.classList.add('active');
 
-			for (let i = 0; i < results.length; i++) {
-				const result = results[i];
+		if (result.items.length) {
+			if (result.type === 'suggestions') {
+				const li = document.createElement('li');
+				li.className = 'suggestify-banner';
+				li.textContent = this.translations?.suggestions ? this.translations?.suggestions : 'Suggestions:';
+				this.list!.appendChild(li);
+			}
+
+			for (let i = 0; i < result.items.length; i++) {
+				const item = result.items[i];
 				const li = document.createElement('li');
 				const a = document.createElement('a');
 
 				a.className = 'suggestify-link';
-				a.setAttribute('aria-label', `Zoeken op: ${result}`);
-				a.href = `${this.url}${result}`;
-				a.textContent = result;
+				a.setAttribute(
+					'aria-label',
+					`${this.translations?.linkLabel ? this.translations?.linkLabel : 'Search on'} ${item}`
+				);
+				a.href = `${this.url}${item}`;
+				a.textContent = item;
 
 				li.appendChild(a);
-				this.result.appendChild(li);
+				this.list!.appendChild(li);
+			}
+		} else {
+			if (result.type === 'results') {
+				const li = document.createElement('li');
+				li.className = 'suggestify-banner';
+				li.textContent = this.translations?.results ? this.translations?.results : 'No suggestions found';
+				this.list!.appendChild(li);
 			}
 		}
 	}
 
 	DeleteResultList() {
-		if (this.result) {
+		if (this.list) {
 			this.root?.classList.remove('active');
 
-			Array.from(this.result.children).forEach((element: Element) => {
-				this.result!.removeChild(element);
+			Array.from(this.list.children).forEach((element: Element) => {
+				this.list!.removeChild(element);
 			});
 		}
 	}
