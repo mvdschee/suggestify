@@ -1,8 +1,19 @@
 {
 	"name": "suggestify",
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"author": "Max van der Schee",
 	"license": "MIT",
+	"files": [
+		"dist"
+	],
+	"main": "./dist/suggestify.umd.js",
+	"module": "./dist/suggestify.es.js",
+	"exports": {
+		".": {
+			"import": "./dist/suggestify.es.js",
+			"require": "./dist/suggestify.umd.js"
+		}
+	},
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc && vite build",

@@ -1,28 +1,28 @@
-import { nanoid } from 'nanoid';
 import './style.scss';
+import { nanoid } from 'nanoid';
 
-interface Options {
+export interface Options {
 	url?: string;
 	engine?: string;
 	translations?: Translations;
 }
 
-interface Translations {
+export interface Translations {
 	suggestions: string;
 	linkLabel: string;
 	results: string;
 }
 
-interface Cache {
+export interface Cache {
 	[key: string]: any;
 }
 
-interface Result {
+export interface Result {
 	type: 'results' | 'suggestions';
 	items: string[];
 }
 
-class Search {
+class Suggestify {
 	private root: Element | null;
 	private engine: string;
 	private url: string;
@@ -189,4 +189,4 @@ function sanitize(string: string) {
 	return string.replace(reg, (match) => map[match]);
 }
 
-export default Search;
+export default Suggestify;

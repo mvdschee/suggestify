@@ -4,16 +4,18 @@
 		"module": "ESNext",
 		"lib": ["ESNext", "DOM"],
 		"moduleResolution": "Node",
-		"allowJs": true,
+		"allowJs": false,
 		"declaration": true,
 		"strict": true,
 		"sourceMap": true,
 		"resolveJsonModule": true,
 		"esModuleInterop": true,
-		"noEmit": true,
+		"noEmit": false,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
-		"noImplicitReturns": true
+		"noImplicitReturns": true,
+		"emitDeclarationOnly": true,
+		"outDir": "types"
 	},
-	"include": ["./src", "./lib"]
+	"include": ["./lib"]
 }
