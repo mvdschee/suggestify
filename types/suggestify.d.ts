@@ -9,7 +9,7 @@ export interface Translations {
 	results: string;
 }
 export interface Cache {
-	[key: string]: any;
+	[key: string]: Result;
 }
 export interface Result {
 	type: 'results' | 'suggestions';
@@ -23,13 +23,35 @@ declare class Suggestify {
 	private list?;
 	private translations;
 	private cache;
+	private searchInput;
 	private timeout;
-	constructor(selector: string | Element, options: Options);
+	constructor(selector: string | HTMLElement, options: Options);
 	initialize(): void;
+	/**
+	 * @description Calls server for initial suggestions
+	 * @returns void
+	 */
 	autoSuggest: () => void;
-	inputSelected: (e: any) => void;
-	searchHandler: (e: any) => void;
-	request(search: string | null): Promise<any>;
+	/**
+	 * @description Deletes results items on blur
+	 * @returns void
+	 */
+	handleBlur: () => void;
+	/**
+	 * @description Show list on click
+	 * @returns void
+	 */
+	inputSelected: () => void;
+	/**
+	 * @description Handle new search input with call to server
+	 * @returns void
+	 */
+	searchHandler: ({ target }: Event) => void;
+	/**
+	 * @description Deletes results items on blur
+	 * @returns void
+	 */
+	request(search: string | null): Promise<Result>;
 	createResultList(result: Result): void;
 	DeleteResultList(): void;
 }

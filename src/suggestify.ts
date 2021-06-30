@@ -14,7 +14,7 @@ export interface Translations {
 }
 
 export interface Cache {
-	[key: string]: any;
+	[key: string]: Result;
 }
 
 export interface Result {
@@ -23,18 +23,20 @@ export interface Result {
 }
 
 class Suggestify {
-	private root: Element | null;
+	private root: HTMLElement | null;
 	private engine: string;
 	private url: string;
-	private input?: Element | null;
-	private list?: Element | null;
+	private input?: HTMLInputElement | null;
+	private list?: HTMLElement | null;
 	private translations: Translations | null;
 	private cache: Cache = {};
+	private searchInput: string | null;
 	private timeout = 200;
 
-	constructor(selector: string | Element, options: Options) {
+	constructor(selector: string | HTMLElement, options: Options) {
 		this.root = typeof selector === 'string' ? document.querySelector(selector) : selector;
 		this.url = options.url || '?q=';
+		this.searchInput = null;
 		this.translations = options.translations || null;
 		this.engine = options.engine || '/api/search';
 		this.input = this.root?.querySelector('input');
@@ -60,6 +62,8 @@ class Suggestify {
 			this.input.setAttribute('aria-haspopup', 'listbox');
 			this.input.setAttribute('aria-expanded', 'false');
 
+			this.searchInput = this.input.value;
+
 			this.list.setAttribute('role', 'listbox');
 			if (!this.list.id) this.list.id = `suggestify-result-${nanoid(5)}`;
 
@@ -67,51 +71,72 @@ class Suggestify {
 			this.input.addEventListener('input', this.searchHandler, { passive: true });
 			this.input.addEventListener('click', this.inputSelected, { passive: true });
 			this.input.addEventListener('mouseover', this.autoSuggest, { once: true, passive: true });
+			this.input.addEventListener('blur', this.handleBlur, { passive: true });
 		}
 	}
 
-	autoSuggest = () => {
-		this.request(null).catch((e) => {
-			console.error(e);
+	/**
+	 * @description Calls server for initial suggestions
+	 * @returns void
+	 */
+	autoSuggest = (): void => {
+		this.request(this.searchInput).catch((e: Error) => {
+			throw new Error(e.message);
 		});
 	};
 
-	inputSelected = (e: any): void => {
-		const input = e.target.value;
-		const searchInput = input ? sanitize(input) : null;
+	/**
+	 * @description Deletes results items on blur
+	 * @returns void
+	 */
+	handleBlur = (): void => {
+		this.DeleteResultList();
+	};
 
-		this.request(searchInput)
+	/**
+	 * @description Show list on click
+	 * @returns void
+	 */
+	inputSelected = (): void => {
+		this.request(this.searchInput)
 			.then((response) => {
 				this.DeleteResultList();
 				this.createResultList(response);
 			})
-			.catch((e) => {
-				console.error(e);
+			.catch((e: Error) => {
+				throw new Error(e.message);
 			});
 	};
 
-	searchHandler = (e: any): void => {
-		const input = e.target.value;
-		const searchInput = input ? sanitize(input) : null;
+	/**
+	 * @description Handle new search input with call to server
+	 * @returns void
+	 */
+	searchHandler = ({ target }: Event): void => {
+		const input = (target as HTMLInputElement).value;
+		this.searchInput = input ? sanitize(input) : null;
 
 		if (this.timeout) clearTimeout(this.timeout);
 		this.timeout = setTimeout(() => {
-			this.request(searchInput)
+			this.request(this.searchInput)
 				.then((response) => {
 					this.DeleteResultList();
 					this.createResultList(response);
 				})
-				.catch((e) => {
-					console.error(e);
+				.catch((e: Error) => {
+					throw new Error(e.message);
 				});
 			// update timeout time too
 		}, 200);
 	};
 
-	request(search: string | null): Promise<any> {
-		console.time('request');
+	/**
+	 * @description Deletes results items on blur
+	 * @returns void
+	 */
+	async request(search: string | null): Promise<Result> {
 		const cacheKey = JSON.stringify(search);
-		if (this.cache[cacheKey]) return Promise.resolve(this.cache[cacheKey]);
+		if (this.cache[cacheKey]) return this.cache[cacheKey];
 
 		const options = {
 			method: 'POST',
@@ -120,10 +145,9 @@ class Suggestify {
 			}),
 		};
 
-		const response = fetch(this.engine, options).then((response) => response.json());
+		const response: Result = await fetch(this.engine, options).then((response) => response.json());
 		this.cache[cacheKey] = response;
 
-		console.timeEnd('request');
 		return response;
 	}
 
@@ -156,9 +180,23 @@ class Suggestify {
 			}
 		} else {
 			if (result.type === 'results') {
+				const banner = document.createElement('li');
 				const li = document.createElement('li');
-				li.className = 'suggestify-banner';
-				li.textContent = this.translations?.results ? this.translations?.results : 'No suggestions found';
+				const a = document.createElement('a');
+
+				banner.className = 'suggestify-banner';
+				banner.textContent = this.translations?.results ? this.translations?.results : 'No suggestions found';
+
+				a.className = 'suggestify-link';
+				a.setAttribute(
+					'aria-label',
+					`${this.translations?.linkLabel ? this.translations?.linkLabel : 'Search on'} ${this.searchInput}`
+				);
+				a.href = `${this.url}${this.searchInput}`;
+				a.textContent = this.searchInput;
+
+				li.appendChild(a);
+				this.list!.appendChild(banner);
 				this.list!.appendChild(li);
 			}
 		}
