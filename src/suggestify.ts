@@ -1,5 +1,7 @@
 import './style.scss';
 import { nanoid } from 'nanoid';
+import { sanitize } from './utils/sanitizer';
+import { switchFn } from './utils/switch';
 
 export interface Options {
 	url?: string;
@@ -42,7 +44,7 @@ class Suggestify {
 		this.input = this.root?.querySelector('input');
 		this.list = this.root?.querySelector('ul');
 
-		this.initialize();
+		if (this.root) this.initialize();
 	}
 
 	initialize(): void {
@@ -70,8 +72,15 @@ class Suggestify {
 			this.input.setAttribute('aria-owns', this.list.id);
 			this.input.addEventListener('input', this.searchHandler, { passive: true });
 			this.input.addEventListener('click', this.inputSelected, { passive: true });
+			this.input.addEventListener('keydown', this.keyHandler, { passive: true });
 			this.input.addEventListener('mouseover', this.autoSuggest, { once: true, passive: true });
 			this.input.addEventListener('blur', this.handleBlur, { passive: true });
+
+			const pre = document.createElement('link');
+			pre.setAttribute('rel', 'preconnect');
+			pre.href = this.engine;
+
+			document.body.appendChild(pre);
 		}
 	}
 
@@ -90,7 +99,9 @@ class Suggestify {
 	 * @returns void
 	 */
 	handleBlur = (): void => {
-		this.DeleteResultList();
+		setTimeout(() => {
+			this.DeleteResultList();
+		}, 100);
 	};
 
 	/**
@@ -106,6 +117,21 @@ class Suggestify {
 			.catch((e: Error) => {
 				throw new Error(e.message);
 			});
+	};
+
+	EnterHandler = () => {
+		if (this.searchInput) window.location.href = `${this.url}${this.searchInput}`;
+	};
+
+	keyHandler = ({ key }: KeyboardEvent): void => {
+		const cases = {
+			Enter: this.EnterHandler,
+			Escape: this.DeleteResultList,
+			_default: () => null,
+		};
+		const keySwitch = switchFn(cases, '_default');
+
+		keySwitch(key);
 	};
 
 	/**
@@ -151,8 +177,9 @@ class Suggestify {
 		return response;
 	}
 
-	createResultList(result: Result) {
-		this.root?.classList.add('active');
+	createResultList(result: Result): void {
+		this.root!.classList.add('active');
+		this.input!.setAttribute('aria-expanded', 'true');
 
 		if (result.items.length) {
 			if (result.type === 'suggestions') {
@@ -202,29 +229,11 @@ class Suggestify {
 		}
 	}
 
-	DeleteResultList() {
-		if (this.list) {
-			this.root?.classList.remove('active');
-
-			Array.from(this.list.children).forEach((element: Element) => {
-				this.list!.removeChild(element);
-			});
-		}
-	}
-}
-
-function sanitize(string: string) {
-	const map: any = {
-		'&': '&amp;',
-		'<': '&lt;',
-		'>': '&gt;',
-		'"': '&quot;',
-		"'": '&#x27;',
-		'`': '&grave;',
-		'/': '&#x2F;',
+	DeleteResultList = (): void => {
+		this.root!.classList.remove('active');
+		this.input!.setAttribute('aria-expanded', 'false');
+		this.list!.innerHTML = '';
 	};
-	const reg = /[&<>"'/`]/gi;
-	return string.replace(reg, (match) => map[match]);
 }
 
 export default Suggestify;
