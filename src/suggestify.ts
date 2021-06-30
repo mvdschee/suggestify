@@ -1,7 +1,6 @@
 import './style.scss';
 import { nanoid } from 'nanoid';
-import { sanitize } from './utils/sanitizer';
-import { switchFn } from './utils/switch';
+import { sanitize, switchFn } from './utils';
 
 export interface Options {
 	url?: string;

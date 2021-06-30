@@ -11,3 +11,8 @@ export function sanitize(string: string) {
 	const reg = /[&<>"'/`]/gi;
 	return string.replace(reg, (match) => map[match]);
 }
+
+export const switchFn =
+	(lookupObject: any, defaultCase = '_default') =>
+	(expression: string) =>
+		(lookupObject[expression] || lookupObject[defaultCase])();
