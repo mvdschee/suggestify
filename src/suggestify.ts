@@ -37,7 +37,7 @@ class Suggestify {
 	private translations: Translations | null;
 	private cache: Cache = {};
 	private searchInput: string | null;
-	private timeout = 200;
+	private timeout = 250;
 
 	constructor(selector: string | HTMLElement, options: Options) {
 		this.root = typeof selector === 'string' ? document.querySelector(selector) : selector;
@@ -160,8 +160,7 @@ class Suggestify {
 				.catch((e: Error) => {
 					throw new Error(e.message);
 				});
-			// update timeout time too
-		}, 200);
+		}, 250);
 	};
 
 	/**

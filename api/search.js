@@ -1,5 +1,5 @@
 const mock = require('./mock.json');
-const A = require('./algorithms');
+const algorithms = require('./algorithms');
 const rateLimit = require('lambda-rate-limiter')({
 	interval: 1000 * 60, // Our rate-limit interval, 1 minute
 	uniqueTokenPerInterval: 500,
@@ -34,7 +34,7 @@ async function searchHandler(event) {
 	const searchText = event.toLowerCase();
 
 	const filteredResults = mock.test.filter((job) => {
-		const distance = A.levenshtein(job.toLowerCase(), searchText);
+		const distance = algorithms.levenshtein(job.toLowerCase(), searchText);
 		return distance <= MIN_DISTANCE;
 	});
 
