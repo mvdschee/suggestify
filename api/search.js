@@ -4,45 +4,33 @@ const rateLimit = require('lambda-rate-limiter')({
 	interval: 1000 * 60, // Our rate-limit interval, 1 minute
 	uniqueTokenPerInterval: 500,
 });
-
-const suggestion = [
-	'Wallaby, tammar',
-	'Gerenuk',
-	'Oryx, fringe-eared',
-	'Fat-tailed dunnart',
-	'Red-shouldered glossy starling',
-	'Southern boubou',
-	'Wild turkey',
-	'Mourning collared dove',
-	'Snake, eastern indigo',
-	'Blue catfish',
-	'Greater roadrunner',
-	'Orca',
-];
 const MIN_DISTANCE = 3;
 
 module.exports = async (req, res) => {
-	const { headers } = req;
-	const body = JSON.parse(req.body);
-	const search = body.search ? sanitize(body.search.trim()) : null;
+	const { headers, body } = req;
+	const bodyObj = JSON.parse(body);
+	const search = bodyObj.search ? sanitize(bodyObj.search.trim()) : null;
 
 	try {
 		await rateLimit.check(50, headers['x-real-ip']);
 	} catch (error) {
-		res.status(429).send('Too Many Requests');
+		return res.status(429).send('Too Many Requests');
 	}
 
-	if (!search) res.status(200).json({ type: 'suggestions', items: suggestion });
+	if (!search) return res.status(200).json({ type: 'suggestions', items: mock.suggestion });
 	else
 		try {
-			const result = searchHandler(search);
-			res.status(200).json({ type: 'results', items: result });
+			console.time('searchHandler');
+			const result = await searchHandler(search);
+			console.timeEnd('searchHandler');
+			return res.status(200).json({ type: 'results', items: result });
 		} catch (error) {
-			res.status(500).send('Internal server Error');
+			return res.status(500).send('Internal server Error');
 		}
+	// return;
 };
 
-function searchHandler(event) {
+async function searchHandler(event) {
 	const searchText = event.toLowerCase();
 
 	const filteredResults = mock.test.filter((job) => {
@@ -50,7 +38,7 @@ function searchHandler(event) {
 		return distance <= MIN_DISTANCE;
 	});
 
-	return filteredResults;
+	return Promise.resolve(filteredResults);
 }
 
 function sanitize(string) {

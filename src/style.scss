@@ -1,10 +1,12 @@
-/*! Copyright (c) 2021 - Max van der Schee; Licensed MIT */
+/*! Copyright (c) 2021 - Max van der Schee
+ * Licensed MIT
+ */
 .suggestify {
 	max-width: 500px;
 	position: relative;
 	width: 100%;
 
-	&.active {
+	&.expanded {
 		input {
 			border-radius: 25px 25px 0 0;
 		}

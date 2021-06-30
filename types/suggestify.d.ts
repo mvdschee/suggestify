@@ -1,3 +1,4 @@
+/*! Copyright (c) 2021 - Max van der Schee; Licensed MIT */
 import './style.scss';
 export interface Options {
     url?: string;

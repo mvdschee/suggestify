@@ -1,3 +1,6 @@
+/*! Copyright (c) 2021 - Max van der Schee
+ * Licensed MIT
+ */
 import './style.scss';
 import { nanoid } from 'nanoid';
 import { sanitize, switchFn } from './utils';
@@ -5,6 +8,7 @@ import { sanitize, switchFn } from './utils';
 export interface Options {
 	url?: string;
 	engine?: string;
+	class?: string;
 	translations?: Translations;
 }
 
@@ -26,6 +30,7 @@ export interface Result {
 class Suggestify {
 	private root: HTMLElement | null;
 	private engine: string;
+	private class: string;
 	private url: string;
 	private input?: HTMLInputElement | null;
 	private list?: HTMLElement | null;
@@ -37,6 +42,7 @@ class Suggestify {
 	constructor(selector: string | HTMLElement, options: Options) {
 		this.root = typeof selector === 'string' ? document.querySelector(selector) : selector;
 		this.url = options.url || '?q=';
+		this.class = options.class || 'suggestify';
 		this.searchInput = null;
 		this.translations = options.translations || null;
 		this.engine = options.engine || '/api/search';
@@ -51,6 +57,7 @@ class Suggestify {
 		i.setAttribute('role', 'presentation');
 		i.setAttribute('focusable', 'false');
 		i.setAttribute('aria-hidden', 'true');
+		i.className = `${this.class}-icon`;
 		this.root?.insertBefore(i, this.root?.childNodes[0]);
 
 		if (this.input && this.list) {
@@ -62,11 +69,13 @@ class Suggestify {
 			this.input.setAttribute('aria-autocomplete', 'list');
 			this.input.setAttribute('aria-haspopup', 'listbox');
 			this.input.setAttribute('aria-expanded', 'false');
+			this.input.className = `${this.class}-input`;
 
 			this.searchInput = this.input.value;
 
 			this.list.setAttribute('role', 'listbox');
-			if (!this.list.id) this.list.id = `suggestify-result-${nanoid(5)}`;
+			this.list.className = `${this.class}-result`;
+			if (!this.list.id) this.list.id = `${this.class}-result-${nanoid(5)}`;
 
 			this.input.setAttribute('aria-owns', this.list.id);
 			this.input.addEventListener('input', this.searchHandler, { passive: true });
@@ -177,13 +186,13 @@ class Suggestify {
 	}
 
 	createResultList(result: Result): void {
-		this.root!.classList.add('active');
+		this.root!.classList.add('expanded');
 		this.input!.setAttribute('aria-expanded', 'true');
 
 		if (result.items.length) {
 			if (result.type === 'suggestions') {
 				const li = document.createElement('li');
-				li.className = 'suggestify-banner';
+				li.className = `${this.class}-banner`;
 				li.textContent = this.translations?.suggestions ? this.translations?.suggestions : 'Suggestions:';
 				this.list!.appendChild(li);
 			}
@@ -193,7 +202,7 @@ class Suggestify {
 				const li = document.createElement('li');
 				const a = document.createElement('a');
 
-				a.className = 'suggestify-link';
+				a.className = `${this.class}-link`;
 				a.setAttribute(
 					'aria-label',
 					`${this.translations?.linkLabel ? this.translations?.linkLabel : 'Search on'} ${item}`
@@ -210,10 +219,10 @@ class Suggestify {
 				const li = document.createElement('li');
 				const a = document.createElement('a');
 
-				banner.className = 'suggestify-banner';
+				banner.className = `${this.class}-banner`;
 				banner.textContent = this.translations?.results ? this.translations?.results : 'No suggestions found';
 
-				a.className = 'suggestify-link';
+				a.className = `${this.class}-link`;
 				a.setAttribute(
 					'aria-label',
 					`${this.translations?.linkLabel ? this.translations?.linkLabel : 'Search on'} ${this.searchInput}`
@@ -229,7 +238,7 @@ class Suggestify {
 	}
 
 	DeleteResultList = (): void => {
-		this.root!.classList.remove('active');
+		this.root!.classList.remove('expanded');
 		this.input!.setAttribute('aria-expanded', 'false');
 		this.list!.innerHTML = '';
 	};

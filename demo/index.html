@@ -6,6 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Suggestify Demo</title>
 		<link href="assets/style.css" rel="stylesheet" />
+		<link href="/api/search" rel="preconnect" />
 		<style>
 			body,
 			html {
@@ -33,16 +34,17 @@
 		<main id="app">
 			<h1>Search with autocomplete</h1>
 
-			<section id="suggestify" class="suggestify">
+			<div id="suggestify" class="demo">
 				<input placeholder="Search..." aria-label="Search for ..." />
-				<ul class="suggestify-result"></ul>
-			</section>
+				<ul></ul>
+			</div>
 		</main>
 		<script type="module">
 			import Suggestify from './assets/suggestify.es.js';
 
 			new Suggestify('#suggestify', {
-				engine: '/api/search',
+				engine: 'api/search',
+				class: 'demo',
 				url: 'https://google.com/search?q=',
 			});
 		</script>
