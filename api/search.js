@@ -30,44 +30,38 @@ module.exports = async (req, res) => {
 	// return;
 };
 
-// total results is 10
-// 0: first word match
-// 1: any-other word match
-// 2: possible alternatives
+// total results is 8
+// 0: first character of word match
+// 1: any character of word match
+// 2: first character of any word
+// 3: any character of any word
+// 4: possible alternatives
 
 async function searchHandler(search) {
 	const searchText = search.toLowerCase();
 	const cap = 8;
 	const list = {
-		0: [],
-		1: [],
-		2: [],
+		match: [],
+		alt: [],
 	};
-	let match = 0;
-
 	let results = [];
+	let matchCount = 0;
+	let altCount = 0;
 
 	const wordsMatch = (item) => {
-		const words = item.split(' ');
-		const reg = new RegExp(searchText, 'i');
+		const reg = new RegExp(searchText.replace(/\W+/g, '|'), 'ig');
 
-		for (let i = 0; i < words.length; i++) {
-			if (reg.test(words[i])) {
-				match++;
-				if (i === 0) {
-					list[0].push(item);
-				} else {
-					list[1].push(item);
-				}
-			}
+		if (reg.test(item)) {
+			matchCount++;
+			list['match'].push(item);
 		}
 	};
 
 	const AltMatch = (item) => {
 		const distance = algorithms.levenshtein(item.toLowerCase(), searchText);
 		if (distance <= MIN_DISTANCE) {
-			match++;
-			list[2].push(item);
+			altCount++;
+			list['alt'].push(item);
 		}
 	};
 
@@ -75,19 +69,51 @@ async function searchHandler(search) {
 		const item = mock.test[i];
 
 		wordsMatch(item);
-
-		AltMatch(item);
-
-		if (match === cap) break;
+		if (altCount !== cap) AltMatch(item);
+		if (matchCount === cap) break;
 	}
 
-	// results = [...list[0], ...list[1], ...list[2]];
+	const sortMatches = sortResults(list['match'], searchText);
 
-	results = new Set([...list[0], ...list[1], ...list[2]]);
+	results = new Set([...sortMatches, ...list['alt'].sort()]);
 
-	console.log(list[0], list[1], list[2]);
+	return Promise.resolve([...results]);
+}
 
-	return Promise.resolve(results);
+function sortResults(list, searchText) {
+	const results = [];
+	const full = new RegExp(searchText, 'i');
+	const par = new RegExp(`${searchText.replace(/\W+/g, '|')}`, 'i');
+	const unsortedlist = {};
+
+	const unfilterd = list
+		.sort()
+		.filter((item) => {
+			const m = full.exec(item);
+			if (m && m.index === 0) {
+				results.push(item);
+				return false;
+			} else return true;
+		})
+		.filter((item) => {
+			if (full.test(item)) {
+				results.push(item);
+				return false;
+			} else return true;
+		})
+		.filter((item) => {
+			const m = par.exec(item);
+			if (m) {
+				unsortedlist[item] = m.index;
+				return false;
+			} else return true;
+		});
+
+	const sortedList = Object.keys(unsortedlist).sort((a, b) => {
+		return unsortedlist[a] - unsortedlist[b];
+	});
+
+	return [...results, ...sortedList];
 }
 
 function sanitize(string) {
