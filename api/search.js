@@ -30,15 +30,64 @@ module.exports = async (req, res) => {
 	// return;
 };
 
-async function searchHandler(event) {
-	const searchText = event.toLowerCase();
+// total results is 10
+// 0: first word match
+// 1: any-other word match
+// 2: possible alternatives
 
-	const filteredResults = mock.test.filter((job) => {
-		const distance = algorithms.levenshtein(job.toLowerCase(), searchText);
-		return distance <= MIN_DISTANCE;
-	});
+async function searchHandler(search) {
+	const searchText = search.toLowerCase();
+	const cap = 8;
+	const list = {
+		0: [],
+		1: [],
+		2: [],
+	};
+	let match = 0;
 
-	return Promise.resolve(filteredResults);
+	let results = [];
+
+	const wordsMatch = (item) => {
+		const words = item.split(' ');
+		const reg = new RegExp(searchText, 'i');
+
+		for (let i = 0; i < words.length; i++) {
+			if (reg.test(words[i])) {
+				match++;
+				if (i === 0) {
+					list[0].push(item);
+				} else {
+					list[1].push(item);
+				}
+			}
+		}
+	};
+
+	const AltMatch = (item) => {
+		const distance = algorithms.levenshtein(item.toLowerCase(), searchText);
+		if (distance <= MIN_DISTANCE) {
+			match++;
+			list[2].push(item);
+		}
+	};
+
+	for (let i = 0; i < mock.test.length; i++) {
+		const item = mock.test[i];
+
+		wordsMatch(item);
+
+		AltMatch(item);
+
+		if (match === cap) break;
+	}
+
+	// results = [...list[0], ...list[1], ...list[2]];
+
+	results = new Set([...list[0], ...list[1], ...list[2]]);
+
+	console.log(list[0], list[1], list[2]);
+
+	return Promise.resolve(results);
 }
 
 function sanitize(string) {
