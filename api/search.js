@@ -1,4 +1,5 @@
 const mock = require('./mock.json');
+const words = require('./index.json');
 const rateLimit = require('lambda-rate-limiter')({
 	interval: 1000 * 60, // Our rate-limit interval, 1 minute
 	uniqueTokenPerInterval: 500,
@@ -64,8 +65,8 @@ async function searchHandler(search) {
 		}
 	};
 
-	for (let i = 0; i < mock.test.length; i++) {
-		const item = mock.test[i];
+	for (let i = 0; i < words.length; i++) {
+		const item = words[i];
 
 		wordsMatch(item);
 		if (altCount !== cap) AltMatch(item);
