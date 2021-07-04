@@ -32,7 +32,7 @@
 	</head>
 	<body>
 		<main id="app">
-			<h1>Search predictions</h1>
+			<h1>Auto-suggestions for search</h1>
 
 			<div id="suggestify" class="demo">
 				<input placeholder="Search..." aria-label="Search for ..." />
@@ -40,7 +40,7 @@
 			</div>
 		</main>
 		<script type="module">
-			import Suggestify from './assets/suggestify.es.js';
+			import Suggestify from './assets/suggestify.esm.js';
 
 			new Suggestify('#suggestify', {
 				engine: 'api/search',

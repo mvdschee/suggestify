@@ -4,7 +4,7 @@ module.exports = {
 	build: {
 		lib: {
 			entry: path.resolve(__dirname, 'src/suggestify.ts'),
-			formats: ['es', 'umd'],
+			formats: ['esm', 'umd'],
 			name: 'suggestify',
 		},
 	},

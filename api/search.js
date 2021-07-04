@@ -1,10 +1,9 @@
 const mock = require('./mock.json');
-const algorithms = require('./algorithms');
 const rateLimit = require('lambda-rate-limiter')({
 	interval: 1000 * 60, // Our rate-limit interval, 1 minute
 	uniqueTokenPerInterval: 500,
 });
-const MIN_DISTANCE = 3;
+const MIN_DISTANCE = 2;
 
 module.exports = async (req, res) => {
 	const { headers, body } = req;
@@ -58,7 +57,7 @@ async function searchHandler(search) {
 	};
 
 	const AltMatch = (item) => {
-		const distance = algorithms.levenshtein(item.toLowerCase(), searchText);
+		const distance = levenshtein(item.toLowerCase(), searchText);
 		if (distance <= MIN_DISTANCE) {
 			altCount++;
 			list['alt'].push(item);
@@ -70,14 +69,13 @@ async function searchHandler(search) {
 
 		wordsMatch(item);
 		if (altCount !== cap) AltMatch(item);
-		if (matchCount === cap) break;
 	}
 
 	const sortMatches = sortResults(list['match'], searchText);
 
 	results = new Set([...sortMatches, ...list['alt'].sort()]);
 
-	return Promise.resolve([...results]);
+	return Promise.resolve([...results].slice(0, 8));
 }
 
 function sortResults(list, searchText) {
@@ -89,6 +87,7 @@ function sortResults(list, searchText) {
 	const unfilterd = list
 		.sort()
 		.filter((item) => {
+			// full match on first word
 			const m = full.exec(item);
 			if (m && m.index === 0) {
 				results.push(item);
@@ -96,6 +95,7 @@ function sortResults(list, searchText) {
 			} else return true;
 		})
 		.filter((item) => {
+			// full match on any word
 			if (full.test(item)) {
 				results.push(item);
 				return false;
@@ -113,10 +113,10 @@ function sortResults(list, searchText) {
 		return unsortedlist[a] - unsortedlist[b];
 	});
 
-	return [...results, ...sortedList];
+	return [...results, ...sortedList, ...unfilterd];
 }
 
-function sanitize(string) {
+const sanitize = (string) => {
 	const map = {
 		'&': '&amp;',
 		'<': '&lt;',
@@ -128,4 +128,25 @@ function sanitize(string) {
 	};
 	const reg = /[&<>"'/`]/gi;
 	return string.replace(reg, (match) => map[match]);
-}
+};
+
+// https://www.30secondsofcode.org/js/s/levenshtein-distance
+const levenshtein = (s, t) => {
+	if (!s.length) return t.length;
+	if (!t.length) return s.length;
+	const arr = [];
+	for (let i = 0; i <= t.length; i++) {
+		arr[i] = [i];
+		for (let j = 1; j <= s.length; j++) {
+			arr[i][j] =
+				i === 0
+					? j
+					: Math.min(
+							arr[i - 1][j] + 1,
+							arr[i][j - 1] + 1,
+							arr[i - 1][j - 1] + (s[j - 1] === t[i - 1] ? 0 : 1)
+					  );
+		}
+	}
+	return arr[t.length][s.length];
+};
