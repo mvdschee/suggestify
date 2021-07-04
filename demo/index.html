@@ -34,7 +34,7 @@
 		<main id="app">
 			<h1>Auto-suggestions for search</h1>
 
-			<div id="suggestify" class="demo">
+			<div id="suggestify" class="suggestify">
 				<input placeholder="Search..." aria-label="Search for ..." />
 				<ul></ul>
 			</div>
@@ -44,7 +44,7 @@
 
 			new Suggestify('#suggestify', {
 				engine: 'api/search',
-				class: 'demo',
+				class: 'suggestify',
 				url: 'https://google.com/search?q=',
 			});
 		</script>

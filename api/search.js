@@ -3,7 +3,7 @@ const rateLimit = require('lambda-rate-limiter')({
 	interval: 1000 * 60, // Our rate-limit interval, 1 minute
 	uniqueTokenPerInterval: 500,
 });
-const MIN_DISTANCE = 2;
+const MIN_DISTANCE = 3;
 
 module.exports = async (req, res) => {
 	const { headers, body } = req;
