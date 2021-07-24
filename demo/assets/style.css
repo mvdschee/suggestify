@@ -1,3 +1,88 @@
-/*! Copyright (c) 2021 - Max van der Schee
- * Licensed MIT
- */.suggestify{max-width:500px;position:relative;width:100%}.suggestify.expanded input{border-radius:25px 25px 0 0}.suggestify>input{box-sizing:border-box;font-size:16px;height:45px;border:0;width:100%;padding:0 10px 0 45px;background-color:transparent;-webkit-appearance:none;border-radius:25px;color:#4d4d74;background-color:#fff;outline:0}.suggestify>input::-webkit-search-cancel-button,.suggestify>input::-webkit-search-decoration,.suggestify>input::-webkit-search-results-button,.suggestify>input::-webkit-search-results-decoration{display:none}.suggestify>i{box-sizing:border-box;position:absolute;top:17px;left:20px;display:block;transform:scale(1);width:16px;height:16px;border:2px solid;border-radius:100%;color:rgba(144,144,211,.5);margin-left:-4px;margin-top:-4px}.suggestify>i::after{content:"";display:block;box-sizing:border-box;position:absolute;border-radius:3px;width:2px;height:8px;background:currentColor;transform:rotate(-45deg);top:10px;left:12px}.suggestify>ul{box-sizing:border-box;margin:0;padding:0;overflow:hidden auto;max-height:312px;list-style:none;position:absolute;width:100%;background-color:#fff;border-radius:0 0 25px 25px}.suggestify>ul>li:last-child a{padding-bottom:10px}.suggestify-banner{padding:11px 20px;background-color:rgba(144,144,211,.2);color:#68689b;font-size:14px}.suggestify-link{display:block;box-sizing:border-box;width:100%;color:#4d4d74;text-decoration:none;padding:10px 20px}.suggestify-link:hover{background-color:rgba(144,144,211,.2)}
+.suggestify {
+	max-width: 500px;
+	position: relative;
+	width: 100%;
+}
+.suggestify.expanded input {
+	border-radius: 25px 25px 0 0;
+}
+.suggestify > input {
+	box-sizing: border-box;
+	font-size: 16px;
+	height: 45px;
+	border: 0;
+	width: 100%;
+	padding: 0 10px 0 45px;
+	background-color: transparent;
+	-webkit-appearance: none;
+	border-radius: 25px;
+	color: #4d4d74;
+	background-color: #fff;
+	outline: 0;
+}
+.suggestify > input::-webkit-search-cancel-button,
+.suggestify > input::-webkit-search-decoration,
+.suggestify > input::-webkit-search-results-button,
+.suggestify > input::-webkit-search-results-decoration {
+	display: none;
+}
+.suggestify > i {
+	box-sizing: border-box;
+	position: absolute;
+	top: 17px;
+	left: 20px;
+	display: block;
+	transform: scale(1);
+	width: 16px;
+	height: 16px;
+	border: 2px solid;
+	border-radius: 100%;
+	color: rgba(144, 144, 211, 0.5);
+	margin-left: -4px;
+	margin-top: -4px;
+}
+.suggestify > i::after {
+	content: '';
+	display: block;
+	box-sizing: border-box;
+	position: absolute;
+	border-radius: 3px;
+	width: 2px;
+	height: 8px;
+	background: currentColor;
+	transform: rotate(-45deg);
+	top: 10px;
+	left: 12px;
+}
+.suggestify > ul {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	overflow: hidden auto;
+	max-height: 312px;
+	list-style: none;
+	position: absolute;
+	width: 100%;
+	background-color: #fff;
+	border-radius: 0 0 25px 25px;
+}
+.suggestify > ul > li:last-child a {
+	padding-bottom: 10px;
+}
+.suggestify-banner {
+	padding: 11px 20px;
+	background-color: rgba(144, 144, 211, 0.2);
+	color: #68689b;
+	font-size: 14px;
+}
+.suggestify-link {
+	display: block;
+	box-sizing: border-box;
+	width: 100%;
+	color: #4d4d74;
+	text-decoration: none;
+	padding: 10px 20px;
+}
+.suggestify-link:hover {
+	background-color: rgba(144, 144, 211, 0.2);
+}

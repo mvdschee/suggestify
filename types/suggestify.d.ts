@@ -1,6 +1,3 @@
-/*! Copyright (c) 2021 - Max van der Schee
- * Licensed MIT
- */
 export interface Options {
 	url?: string;
 	engine?: string;
@@ -18,6 +15,7 @@ export interface Cache {
 export interface Result {
 	type: 'results' | 'suggestions';
 	items: string[];
+	time: number;
 }
 declare class Suggestify {
 	private root;

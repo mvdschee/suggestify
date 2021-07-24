@@ -1,6 +1,3 @@
-/*! Copyright (c) 2021 - Max van der Schee
- * Licensed MIT
- */
 import './style.scss';
 import { nanoid } from 'nanoid';
 import { sanitize, switchFn } from './utils';
@@ -25,6 +22,7 @@ export interface Cache {
 export interface Result {
 	type: 'results' | 'suggestions';
 	items: string[];
+	time: number;
 }
 
 class Suggestify {
@@ -141,15 +139,16 @@ class Suggestify {
 	 * @returns void
 	 */
 	searchHandler = ({ target }: Event): void => {
-		const input = (target as HTMLInputElement).value;
-		this.searchInput = input ? sanitize(input) : null;
-
 		if (this.timeout) clearTimeout(this.timeout);
 		this.timeout = setTimeout(() => {
+			const input = (target as HTMLInputElement).value.trim();
+			this.searchInput = input ? sanitize(input) : null;
+
 			this.request(this.searchInput)
 				.then((response) => {
 					this.DeleteResultList();
 					this.createResultList(response);
+					console.info(`result (${response.time.toFixed(2)} seconds)`);
 				})
 				.catch((e: Error) => {
 					throw new Error(e.message);
@@ -201,12 +200,25 @@ class Suggestify {
 					`${this.translations?.linkLabel ? this.translations?.linkLabel : 'Search on'} ${item}`
 				);
 				a.href = `${this.url}${item}`;
-				a.textContent = item;
+
+				if (result.type === 'results') {
+					const words = this.searchInput ? this.searchInput.split(' ') : [];
+					let text = item;
+
+					for (let i = 0; i < words.length; i++) {
+						const word = words[i];
+						text = text.replace(word, `<b>${word}</b>`);
+					}
+
+					a.innerHTML = text;
+				} else a.textContent = item;
 
 				li.appendChild(a);
 				this.list!.appendChild(li);
 			}
 		} else {
+			// No items found add message to results list
+			// and set search text as suggestion to use
 			if (result.type === 'results') {
 				const banner = document.createElement('li');
 				const li = document.createElement('li');

@@ -10,17 +10,14 @@ export async function multiSearchHandler(search, words) {
 	const wordsMatch = (item) => {
 		const reg = new RegExp(search.replace(/\W+/g, '|'), 'i');
 
-		if (reg.test(item)) {
-			list['match'].push(item);
-		}
+		if (reg.test(item)) list['match'].push(item);
 		return;
 	};
 
 	const AltMatch = (item) => {
 		const distance = levenshtein(item.toLowerCase(), search);
-		if (distance <= config.MIN_DISTANCE) {
-			list['alt'].push(item);
-		}
+
+		if (distance <= config.MIN_DISTANCE) list['alt'].push(item);
 		return;
 	};
 
