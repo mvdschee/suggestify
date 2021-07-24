@@ -2,6 +2,7 @@ export interface Options {
 	url?: string;
 	engine?: string;
 	class?: string;
+	dev?: boolean;
 	translations?: Translations;
 }
 export interface Translations {
@@ -22,6 +23,7 @@ declare class Suggestify {
 	private engine;
 	private class;
 	private url;
+	private dev;
 	private input?;
 	private list?;
 	private translations;

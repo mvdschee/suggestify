@@ -6,6 +6,7 @@ export interface Options {
 	url?: string;
 	engine?: string;
 	class?: string;
+	dev?: boolean;
 	translations?: Translations;
 }
 
@@ -30,6 +31,7 @@ class Suggestify {
 	private engine: string;
 	private class: string;
 	private url: string;
+	private dev: boolean;
 	private input?: HTMLInputElement | null;
 	private list?: HTMLElement | null;
 	private translations: Translations | null;
@@ -41,6 +43,7 @@ class Suggestify {
 		this.root = typeof selector === 'string' ? document.querySelector(selector) : selector;
 		this.url = options.url || '?q=';
 		this.class = options.class || 'suggestify';
+		this.dev = options.dev || false;
 		this.searchInput = null;
 		this.translations = options.translations || null;
 		this.engine = options.engine || '/api/search';
@@ -80,7 +83,7 @@ class Suggestify {
 			this.input.addEventListener('click', this.inputSelected, { passive: true });
 			this.input.addEventListener('keydown', this.keyHandler, { passive: true });
 			this.input.addEventListener('mouseover', this.autoSuggest, { once: true, passive: true });
-			this.input.addEventListener('blur', this.handleBlur, { passive: true });
+			if (!this.dev) this.input.addEventListener('blur', this.handleBlur, { passive: true });
 		}
 	}
 
