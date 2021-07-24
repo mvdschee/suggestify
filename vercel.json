@@ -1,7 +1,7 @@
 {
 	"functions": {
 		"api/core/*.js": {
-			"excludeFiles": "*.js"
+			"excludeFiles": "api/core/*.js"
 		}
 	}
 }
