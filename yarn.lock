@@ -129,10 +129,10 @@ picomatch@^2.0.4, picomatch@^2.2.1:
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.3.0.tgz#f1f061de8f6a4bf022892e2d128234fb98302972"
   integrity sha512-lY1Q/PiJGC2zOv/z391WOTD+Z02bCgsFfvxoXXf6h7kv9o+WmsmzYqrAwY63sNgOxE4xEdq0WyUnXfKeBrSvYw==
 
-postcss@^8.3.4:
-  version "8.3.5"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.3.5.tgz#982216b113412bc20a86289e91eb994952a5b709"
-  integrity sha512-NxTuJocUhYGsMiMFHDUkmjSKT3EdH4/WbGF6GCi1NDGk+vbcUTun4fpbOqaPtD8IIsztA2ilZm2DhYCuyN58gA==
+postcss@^8.3.5:
+  version "8.3.6"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.3.6.tgz#2730dd76a97969f37f53b9a6096197be311cc4ea"
+  integrity sha512-wG1cc/JhRgdqB6WHEuyLTedf3KIRuD0hG6ldkFEZNCjRxiC+3i6kkWUUbiJQayP28iwG35cEmAbe98585BYV0A==
   dependencies:
     colorette "^1.2.2"
     nanoid "^3.1.23"
@@ -160,10 +160,10 @@ rollup@^2.38.5:
   optionalDependencies:
     fsevents "~2.3.2"
 
-sass@^1.35.1:
-  version "1.35.1"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.35.1.tgz#90ecf774dfe68f07b6193077e3b42fb154b9e1cd"
-  integrity sha512-oCisuQJstxMcacOPmxLNiLlj4cUyN2+8xJnG7VanRoh2GOLr9RqkvI4AxA4a6LHVg/rsu+PmxXeGhrdSF9jCiQ==
+sass@^1.36.0:
+  version "1.36.0"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.36.0.tgz#5912ef9d5d16714171ba11cb17edb274c4bbc07e"
+  integrity sha512-fQzEjipfOv5kh930nu3Imzq3ie/sGDc/4KtQMJlt7RRdrkQSfe37Bwi/Rf/gfuYHsIuE1fIlDMvpyMcEwjnPvg==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
 
@@ -179,18 +179,18 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
-typescript@^4.3.2:
-  version "4.3.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.4.tgz#3f85b986945bcf31071decdd96cf8bfa65f9dcbc"
-  integrity sha512-uauPG7XZn9F/mo+7MrsRjyvbxFpzemRjKEZXS4AK83oP2KKOJPvb+9cO/gmnv8arWZvhnjVOXz7B49m1l0e9Ew==
+typescript@^4.3.5:
+  version "4.3.5"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.5.tgz#4d1c37cc16e893973c45a06886b7113234f119f4"
+  integrity sha512-DqQgihaQ9cUrskJo9kIyW/+g0Vxsk8cDtZ52a3NGh0YNTfpUSArXSohyUGnvbPazEPLu398C0UxmKSOrPumUzA==
 
-vite@^2.3.8:
-  version "2.3.8"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-2.3.8.tgz#42e3e03953859fd410e4e6ab3d1cca0aab2adc3c"
-  integrity sha512-QiEx+iqNnJntSgSF2fWRQvRey9pORIrtNJzNyBJXwc+BdzWs83FQolX84cTBo393cfhObrtWa6180dAa4NLDiQ==
+vite@^2.4.3:
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-2.4.3.tgz#fe4aa78e9dd7d36bcb12eccbd52313b26cfadf77"
+  integrity sha512-iT6NPeiUUZ2FkzC3eazytOEMRaM4J+xgRQcNcpRcbmfYjakCFP4WKPJpeEz1U5JEKHAtwv3ZBQketQUFhFU3ng==
   dependencies:
     esbuild "^0.12.8"
-    postcss "^8.3.4"
+    postcss "^8.3.5"
     resolve "^1.20.0"
     rollup "^2.38.5"
   optionalDependencies:

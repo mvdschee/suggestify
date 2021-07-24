@@ -1,7 +1,7 @@
 /*!
 * @project      suggestify
 * @author      	Max van der Schee
-* @build        1627131167400
+* @build        1627131565239
 * @release      1.0.0
 * @copyright    Copyright (c) 2021 Max van der Schee
 */
