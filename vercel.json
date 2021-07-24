@@ -1,5 +1,5 @@
 {
 	"functions": {
-		"excludeFiles": "/core/*js"
+		"excludeFiles": "api/core/*js"
 	}
 }
