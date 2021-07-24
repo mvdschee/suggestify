@@ -5,7 +5,7 @@
 		<link rel="icon" type="image/svg+xml" href="favicon.svg" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Suggestify Demo</title>
-		<link href="assets/style.css" rel="stylesheet" />
+		<link href="style.css" rel="stylesheet" />
 		<link href="/api/search" rel="preconnect" />
 		<style>
 			body,
@@ -40,10 +40,10 @@
 			</div>
 		</main>
 		<script type="module">
-			import Suggestify from './assets/suggestify.esm.js';
+			import Suggestify from './suggestify.esm.js';
 
 			new Suggestify('#suggestify', {
-				engine: 'api/search',
+				engine: '/api/search',
 				class: 'suggestify',
 				url: 'https://www.google.com/search?q=',
 			});
