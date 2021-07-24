@@ -91,18 +91,21 @@
 
 .suggestify-banner {
 	padding: 11px 20px;
+	font-size: 14px;
+	line-height: 1.1;
 	background-color: rgba(144, 144, 211, 0.2);
 	color: rgb(104, 104, 155);
-	font-size: 14px;
 }
 
 .suggestify-link {
 	display: block;
 	box-sizing: border-box;
 	width: 100%;
+	padding: 10px 20px;
+	font-size: 16px;
+	line-height: 1.1;
 	color: rgb(77, 77, 116);
 	text-decoration: none;
-	padding: 10px 20px;
 
 	&:hover {
 		background-color: rgba(144, 144, 211, 0.2);
