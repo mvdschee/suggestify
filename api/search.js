@@ -7,7 +7,22 @@ const rateLimit = require('lambda-rate-limiter')({
 	uniqueTokenPerInterval: 500,
 });
 
-module.exports = async (req, res) => {
+const allowCors = (fn) => async (req, res) => {
+	const allowedOrigins = ['http://localhost:3000', 'http://localhost:8080', 'https://suggestify.maxvanderschee.nl'];
+	const origin = req.headers.origin;
+
+	if (allowedOrigins.indexOf(origin) > -1) res.setHeader('Access-Control-Allow-Origin', origin);
+	res.setHeader('Access-Control-Allow-Credentials', true);
+	res.setHeader('Access-Control-Allow-Methods', 'POST');
+	res.setHeader(
+		'Access-Control-Allow-Headers',
+		'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+	);
+
+	return await fn(req, res);
+};
+
+const handler = async (req, res) => {
 	const { headers, body } = req;
 	const bodyObj = JSON.parse(body);
 	const search = bodyObj.search ? sanitize(bodyObj.search.trim()) : null;
@@ -51,3 +66,5 @@ const sanitize = (string) => {
 	const reg = /[&<>"'/`]/gi;
 	return string.replace(reg, (match) => map[match]);
 };
+
+module.exports = allowCors(handler);
