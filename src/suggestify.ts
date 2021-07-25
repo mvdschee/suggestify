@@ -45,8 +45,8 @@ class Suggestify {
 		this.root = typeof selector === 'string' ? document.querySelector(selector) : selector;
 		this.url = options.url || '?q=';
 		this.class = options.class || 'suggestify';
-		this.blur = options.blur || true;
-		this.instant = options.instant || false;
+		this.blur = options.blur !== undefined ? options.blur : true;
+		this.instant = options.instant !== undefined ? options.instant : false;
 		this.searchInput = null;
 		this.translations = options.translations || null;
 		this.engine = options.engine || '/api/search';
@@ -85,7 +85,7 @@ class Suggestify {
 			this.input.addEventListener('input', this.searchHandler, { passive: true });
 			this.input.addEventListener('click', this.inputSelected, { passive: true });
 			this.input.addEventListener('keydown', this.keyHandler, { passive: true });
-			if (this.instant) this.autoSuggest;
+			if (this.instant) this.autoSuggest();
 			else this.input.addEventListener('mouseover', this.autoSuggest, { once: true, passive: true });
 			if (this.blur) this.input.addEventListener('blur', this.handleBlur, { passive: true });
 		}
@@ -96,9 +96,15 @@ class Suggestify {
 	 * @returns void
 	 */
 	autoSuggest = (): void => {
-		this.request(this.searchInput).catch((e: Error) => {
-			throw new Error(e.message);
-		});
+		this.request(this.searchInput)
+			.then((response) => {
+				if (this.instant) {
+					this.createResultList(response);
+				}
+			})
+			.catch((e: Error) => {
+				throw new Error(e.message);
+			});
 	};
 
 	/**
