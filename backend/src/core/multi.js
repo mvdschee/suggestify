@@ -1,5 +1,5 @@
-const { levenshtein } = require('./utils');
-const { config } = require('./config');
+import { levenshtein } from './utils';
+import { config } from './config';
 export async function multiSearchHandler(search, words) {
 	const list = {
 		match: [],

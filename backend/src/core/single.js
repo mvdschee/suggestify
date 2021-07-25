@@ -1,4 +1,4 @@
-const { config } = require('./config');
+import { config } from './config';
 
 export async function singleSearchHandler(search, words) {
 	const results = [];
