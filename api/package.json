@@ -4,5 +4,8 @@
 	"main": "./search.js",
 	"author": "Max van der Schee",
 	"license": "MIT",
-	"private": true
+	"private": true,
+	"dependencies": {
+		"lambda-rate-limiter": "^3.0.0"
+	}
 }
