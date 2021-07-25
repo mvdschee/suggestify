@@ -7,7 +7,7 @@ export async function singleSearchHandler(search, words) {
 	for (let i = 0; i < words.length; i++) {
 		const m = reg.exec(words[i]);
 
-		if (m.index === 0) results.push(words[i]);
+		if (m.index === 0) results.push(words[i].toLowerCase());
 		if (results.length === config.ITEM_CAP) break;
 	}
 

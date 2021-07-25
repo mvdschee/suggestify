@@ -5,11 +5,12 @@ module.exports = {
 	build: {
 		lib: {
 			entry: path.resolve(__dirname, 'src/suggestify.ts'),
-			formats: ['esm', 'umd'],
+			formats: ['esm'],
 			name: 'suggestify',
 		},
 		rollupOptions: {
 			output: {
+				entryFileNames: `suggestify.js`,
 				banner: `/*!
 * @project      ${pkg.name}
 * @author      	${pkg.author}
