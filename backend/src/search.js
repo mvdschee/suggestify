@@ -1,6 +1,7 @@
-import { suggestion, items as _items } from './data/mock.json';
 import { multiSearchHandler } from './core/multi';
 import { singleSearchHandler } from './core/single';
+const _items = require('./items.json');
+const _sugestions = require('./suggestions.json');
 const rateLimit = require('lambda-rate-limiter')({
 	interval: 1000 * 60, // Our rate-limit interval, 1 minute
 	uniqueTokenPerInterval: 500,
@@ -32,7 +33,7 @@ const handler = async (req, res) => {
 		return res.status(429).send('Too Many Requests');
 	}
 
-	if (!search) return res.status(200).json({ type: 'suggestions', items: suggestion, time: 0 });
+	if (!search) return res.status(200).json({ type: 'suggestions', items: _sugestions, time: 0 });
 	else
 		try {
 			let start = process.hrtime();
