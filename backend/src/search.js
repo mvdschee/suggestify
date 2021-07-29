@@ -8,7 +8,13 @@ const rateLimit = require('lambda-rate-limiter')({
 });
 
 const allowCors = (fn) => async (req, res) => {
-	const allowedOrigins = ['http://localhost:3000', 'http://localhost:8080', 'https://tst.hanze.bloomreach.cloud'];
+	const allowedOrigins = [
+		'http://localhost:3000',
+		'http://localhost:8080',
+		'https://tst.hanze.bloomreach.cloud',
+		'https://hanze.vercel.app',
+		'https://acceptatie.hanze.bloomreach.cloud',
+	];
 	const origin = req.headers.origin;
 
 	if (allowedOrigins.indexOf(origin) > -1) res.setHeader('Access-Control-Allow-Origin', origin);
