@@ -46,7 +46,9 @@ const handler = async (req, res) => {
 			let start = process.hrtime();
 			const items = await searchHandler(search.toLowerCase());
 			let stop = process.hrtime(start);
-			return res.status(200).json({ type: 'results', items, time: (stop[0] * 1e9 + stop[1]) / 1e9 });
+			return res
+				.status(200)
+				.json({ type: items.length ? 'results' : 'empty', items, time: (stop[0] * 1e9 + stop[1]) / 1e9 });
 		} catch (error) {
 			return res.status(500).send('Woopsie, we will look into it!');
 		}

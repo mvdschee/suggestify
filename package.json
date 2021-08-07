@@ -26,5 +26,8 @@
 	},
 	"dependencies": {
 		"nanoid": "^3.1.23"
+	},
+	"engines": {
+		"node": ">= 14.x"
 	}
 }

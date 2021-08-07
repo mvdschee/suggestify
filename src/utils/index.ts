@@ -16,3 +16,9 @@ export const switchFn =
 	(lookupObject: any, defaultCase = '_default') =>
 	(expression: string) =>
 		(lookupObject[expression] || lookupObject[defaultCase])();
+
+export function setAttributes(el: Element, attrs: { [key: string]: string }) {
+	for (var key in attrs) {
+		el.setAttribute(key, attrs[key]);
+	}
+}

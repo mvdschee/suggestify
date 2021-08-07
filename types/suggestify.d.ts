@@ -1,44 +1,29 @@
-export interface Options {
-	url?: string;
-	engine?: string;
-	class?: string;
-	blur?: boolean;
-	instant?: boolean;
-	translations?: Translations;
-}
-export interface Translations {
-	suggestions: string;
-	linkLabel: string;
-	results: string;
-}
-export interface Cache {
-	[key: string]: Result;
-}
-export interface Result {
-	type: 'results' | 'suggestions';
-	items: string[];
-	time: number;
-}
+import { Result, Options } from './types';
 declare class Suggestify {
-	private root;
 	private engine;
 	private class;
 	private url;
 	private blur;
 	private instant;
+	private t;
+	private icon;
+	private root;
 	private input?;
-	private list?;
-	private translations;
-	private cache;
+	private clearBtn?;
+	private submitBtn?;
+	private list;
+	private listItems;
+	private selectedIndex;
 	private searchInput;
+	private cache;
 	private timeout;
 	constructor(selector: string | HTMLElement, options: Options);
 	initialize(): void;
 	/**
-	 * @description Calls server for initial suggestions
+	 * @description Update all HTML elements and creat new once
 	 * @returns void
 	 */
-	autoSuggest: () => void;
+	initializeDOM(): void;
 	/**
 	 * @description Deletes results items on blur
 	 * @returns void
@@ -49,19 +34,37 @@ declare class Suggestify {
 	 * @returns void
 	 */
 	inputSelected: () => void;
-	EnterHandler: () => void;
+	/**
+	 * @description clear input and close list
+	 * @returns void
+	 */
+	clearInput: () => void;
+	/**
+	 * @description Will use input to go to search page or
+	 * use selected index item
+	 * @returns void
+	 */
+	directSearch: () => void;
+	selectItemUp: () => void;
+	selectItemDown: () => void;
 	keyHandler: ({ key }: KeyboardEvent) => void;
+	/**
+	 * @description Calls server for initial suggestions
+	 * @returns void
+	 */
+	autoSuggest: () => void;
 	/**
 	 * @description Handle new search input with call to server
 	 * @returns void
 	 */
-	searchHandler: ({ target }: Event) => void;
+	searchInputHandler: ({ target }: Event) => void;
 	/**
 	 * @description Deletes results items on blur
 	 * @returns void
 	 */
 	request(search: string | null): Promise<Result>;
+	banner: (type: string) => void;
 	createResultList(result: Result): void;
-	DeleteResultList: () => void;
+	deleteResultList: () => void;
 }
 export default Suggestify;
