@@ -1,7 +1,7 @@
 {
 	"name": "suggestify",
-	"version": "1.0.1",
-	"description": "Search suggestions based on search engine (not included)",
+	"version": "1.0.2",
+	"description": "Fully accessible search box with suggestions",
 	"author": "Max van der Schee",
 	"license": "MIT",
 	"main": "suggestify.umd.js",

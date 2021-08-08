@@ -4,7 +4,7 @@
 		<meta charset="UTF-8" />
 		<link rel="icon" type="image/svg+xml" href="favicon.svg" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Suggestify Demo</title>
+		<title>Suggestify</title>
 		<link href="style.css" rel="stylesheet" />
 		<link href="https://suggestify-engine.maxvanderschee.nl/api/search" rel="preconnect" />
 		<style>
@@ -16,10 +16,12 @@
 				background-color: whitesmoke;
 			}
 			#app {
+				box-sizing: border-box;
 				display: flex;
 				flex-direction: column;
 				justify-content: center;
 				align-items: center;
+				padding: 0 10px;
 				width: 100vw;
 				height: 100vh;
 				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
@@ -29,6 +31,7 @@
 				font-weight: 100;
 			}
 			p {
+				text-align: center;
 				margin-top: 2.5em;
 				margin-bottom: 0;
 			}
@@ -51,12 +54,12 @@
 			<h1>Suggestify</h1>
 
 			<div id="suggestify">
-				<input placeholder="Search for" aria-label="Search" />
+				<input placeholder="Search..." aria-label="Search" />
 				<button aria-label="Delete input"></button>
 				<button type="submit" aria-label="Search"></button>
 			</div>
 
-			<p>Fully accessible searchbox with suggestions</p>
+			<p>Fully accessible search box with suggestions</p>
 			<p>Suggestions served by serverless function</p>
 
 			<footer>
@@ -114,7 +117,7 @@
 			new Suggestify('#suggestify', {
 				engine: 'https://suggestify-engine.maxvanderschee.nl/api/search',
 				class: 'suggestify',
-				url: 'https://www.google.com/search?q=',
+				url: '?q=',
 			});
 		</script>
 	</body>

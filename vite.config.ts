@@ -1,4 +1,5 @@
 import path from 'path';
+import copy from 'rollup-plugin-copy';
 import pkg from './package.json';
 
 module.exports = {
@@ -12,6 +13,17 @@ module.exports = {
 		},
 		outDir: './lib',
 		rollupOptions: {
+			plugins: [
+				copy({
+					targets: [
+						{
+							src: 'src/style.scss',
+							dest: 'lib',
+						},
+					],
+					hook: 'writeBundle',
+				}),
+			],
 			output: {
 				banner: `/*!
 * @project      ${pkg.name}

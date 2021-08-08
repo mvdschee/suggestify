@@ -1,28 +1,27 @@
 {
 	"name": "suggestify",
-	"version": "1.0.1",
+	"description": "Fully accessible search box with suggestions",
+	"version": "1.0.2",
 	"author": "Max van der Schee",
 	"license": "MIT",
-	"files": [
-		"dist"
-	],
-	"main": "./lib/suggestify.umd.js",
-	"module": "./lib/suggestify.esm.js",
-	"exports": {
-		".": {
-			"import": "./lib/suggestify.esm.js",
-			"require": "./lib/suggestify.umd.js"
-		}
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/mvdschee/suggestify.git"
 	},
+	"bugs": {
+		"url": "https://github.com/mvdschee/suggestify/issues"
+	},
+	"homepage": "https://suggestify.maxvanderschee.nl",
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc && vite build",
 		"serve": "vite preview"
 	},
 	"devDependencies": {
-		"sass": "^1.36.0",
+		"rollup-plugin-copy": "^3.4.0",
+		"sass": "^1.37.5",
 		"typescript": "^4.3.5",
-		"vite": "^2.4.3"
+		"vite": "^2.4.4"
 	},
 	"dependencies": {
 		"nanoid": "^3.1.23"

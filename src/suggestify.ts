@@ -45,7 +45,7 @@ class Suggestify {
 	private selectedIndex: number = -1;
 	private searchInput: string | null = null;
 	private cache: Cache = {};
-	private timeout = 250;
+	private timeout: number | any = 250;
 
 	constructor(selector: string | HTMLElement, options: Options) {
 		// HTML
