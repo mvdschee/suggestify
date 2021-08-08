@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "ESNext",
+		"lib": ["ESNext", "DOM"],
+		"moduleResolution": "Node",
+		"allowJs": false,
+		"declaration": true,
+		"strict": true,
+		"sourceMap": true,
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"noEmit": false,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noImplicitReturns": true,
+		"emitDeclarationOnly": true,
+		"outDir": "lib"
+	},
+	"include": ["src/suggestify.ts"]
+}
