@@ -15,7 +15,7 @@
 		"noUnusedParameters": true,
 		"noImplicitReturns": true,
 		"emitDeclarationOnly": true,
-		"outDir": "types"
+		"outDir": "lib"
 	},
 	"include": ["src/suggestify.ts"]
 }

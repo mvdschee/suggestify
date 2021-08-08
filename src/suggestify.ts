@@ -1,4 +1,3 @@
-import './style.scss';
 import { nanoid } from 'nanoid';
 import { sanitize, setAttributes, switchFn } from './utils';
 export interface Options {

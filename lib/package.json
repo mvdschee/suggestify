@@ -7,9 +7,6 @@
 	"main": "suggestify.umd.js",
 	"module": "suggestify.esm.js",
 	"typings": "suggestify.d.ts",
-	"sideEffects": [
-		"*.css"
-	],
 	"scripts": {
 		"postinstall": "node -e \"try{require('./postinstall')}catch(e){}\""
 	},
