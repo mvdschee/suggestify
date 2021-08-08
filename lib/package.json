@@ -1,6 +1,6 @@
 {
 	"name": "suggestify",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Search suggestions based on search engine (not included)",
 	"author": "Max van der Schee",
 	"license": "MIT",
