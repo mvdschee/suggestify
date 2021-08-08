@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Suggestify Demo</title>
 		<link href="style.css" rel="stylesheet" />
-		<link href="/api/search" rel="preconnect" />
+		<link href="https://suggestify-engine.maxvanderschee.nl/api/search" rel="preconnect" />
 		<style>
 			body,
 			html {
@@ -32,7 +32,7 @@
 	</head>
 	<body>
 		<main id="app">
-			<h1>Auto-suggestions for search</h1>
+			<h1>Demo suggestions for search</h1>
 
 			<div id="suggestify">
 				<input placeholder="Search for" aria-label="Search" />
@@ -41,10 +41,10 @@
 			</div>
 		</main>
 		<script type="module">
-			import Suggestify from './suggestify.js';
+			import Suggestify from './suggestify.esm.js';
 
 			new Suggestify('#suggestify', {
-				engine: '/api/search',
+				engine: 'https://suggestify-engine.maxvanderschee.nl/api/search',
 				class: 'suggestify',
 				url: 'https://www.google.com/search?q=',
 			});

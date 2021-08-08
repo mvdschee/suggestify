@@ -3,14 +3,15 @@ import pkg from './package.json';
 
 module.exports = {
 	build: {
+		target: 'esnext',
 		lib: {
 			entry: path.resolve(__dirname, 'src/suggestify.ts'),
-			formats: ['esm'],
+			formats: ['esm', 'umd'],
 			name: 'suggestify',
 		},
+		outDir: './lib',
 		rollupOptions: {
 			output: {
-				entryFileNames: `suggestify.js`,
 				banner: `/*!
 * @project      ${pkg.name}
 * @author      	${pkg.author}

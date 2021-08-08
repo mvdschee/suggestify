@@ -1,7 +1,30 @@
 import './style.scss';
 import { nanoid } from 'nanoid';
 import { sanitize, setAttributes, switchFn } from './utils';
-import { Translations, Cache, Result, Options } from './types';
+export interface Options {
+	url?: string;
+	engine?: string;
+	class?: string;
+	blur?: boolean;
+	icon?: boolean;
+	instant?: boolean;
+	translations?: Translations;
+}
+
+export interface Translations {
+	suggestions: string;
+	results: string;
+}
+
+export interface Cache {
+	[key: string]: Result;
+}
+
+export interface Result {
+	type: 'results' | 'suggestions' | 'empty';
+	items: string[];
+	time: number;
+}
 
 class Suggestify {
 	// options
