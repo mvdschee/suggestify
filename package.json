@@ -1,7 +1,7 @@
 {
 	"name": "suggestify",
 	"description": "Fully accessible search box with suggestions",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"author": "Max van der Schee",
 	"license": "MIT",
 	"repository": {

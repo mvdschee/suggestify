@@ -21,6 +21,18 @@ Please note: this project is a personal project I made available and will probab
 $ yarn add suggestify
 ```
 
+Set up your HTML
+
+```html
+<div id="suggestify" role="search">
+	<input placeholder="Search..." aria-label="Search input" />
+	<button aria-label="Delete input"></button>
+	<button type="submit" aria-label="Search"></button>
+</div>
+```
+
+Import the files in your Javascript or TypeScript file
+
 ```js
 // import Suggestify
 import Suggestify from 'suggestify';
