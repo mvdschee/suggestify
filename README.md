@@ -119,7 +119,7 @@ Three types are used for different cases.
     {
         type: 'suggestions',
         items: ['item', ...],
-        time: 0
+        time: '0ms'
     }
     ```
 
@@ -128,7 +128,7 @@ Three types are used for different cases.
     {
         type: 'results',
         items: ['item', ...],
-        time: 0.05 // calculation time in seconds
+        time: '0.05ms'
     }
     ```
 3. empty: if no results are found > which also means the response has an empty items `array`
@@ -136,7 +136,7 @@ Three types are used for different cases.
     {
         type: 'empty',
         items: [],
-        time: 0.01 // calculation time in seconds
+        time: '0.01ms'
     }
     ```
 

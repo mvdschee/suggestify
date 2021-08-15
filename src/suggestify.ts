@@ -43,7 +43,7 @@ class Suggestify {
 	// data
 	private listItems: HTMLLIElement[] = [];
 	private selectedIndex: number = -1;
-	private searchInput: string | null = null;
+	private searchInput: string = '';
 	private cache: Cache = {};
 	private timeout: number | any = 250;
 
@@ -85,10 +85,6 @@ class Suggestify {
 		else this.input.addEventListener('mouseover', this.autoSuggest, { once: true, passive: true });
 	}
 
-	/**
-	 * @description Update all HTML elements and creat new once
-	 * @returns void
-	 */
 	initializeDOM() {
 		const listId = `${this.class}-results-${nanoid(5)}`;
 
@@ -150,20 +146,12 @@ class Suggestify {
 		this.root?.appendChild(this.list);
 	}
 
-	/**
-	 * @description Deletes results items on blur
-	 * @returns void
-	 */
 	handleBlur = (): void => {
 		setTimeout(() => {
 			this.deleteResultList();
 		}, 100);
 	};
 
-	/**
-	 * @description Show list on click
-	 * @returns void
-	 */
 	inputSelected = (): void => {
 		this.request(this.searchInput)
 			.then((response) => {
@@ -175,12 +163,8 @@ class Suggestify {
 			});
 	};
 
-	/**
-	 * @description clear input and close list
-	 * @returns void
-	 */
 	clearInput = (): void => {
-		this.searchInput = null;
+		this.searchInput = '';
 		this.input!.value = '';
 
 		this.deleteResultList();
@@ -188,11 +172,6 @@ class Suggestify {
 		if (this.clearBtn) this.clearBtn.hidden = true;
 	};
 
-	/**
-	 * @description Will use input to go to search page or
-	 * use selected index item
-	 * @returns void
-	 */
 	directSearch = (): void => {
 		if (this.selectedIndex !== -1) {
 			const item = this.listItems[this.selectedIndex];
@@ -247,10 +226,6 @@ class Suggestify {
 		keySwitch(key);
 	};
 
-	/**
-	 * @description Calls server for initial suggestions
-	 * @returns void
-	 */
 	autoSuggest = (): void => {
 		this.request(this.searchInput)
 			.then((response) => {
@@ -263,16 +238,12 @@ class Suggestify {
 			});
 	};
 
-	/**
-	 * @description Handle new search input with call to server
-	 * @returns void
-	 */
 	searchInputHandler = ({ target }: Event): void => {
 		if (this.timeout) clearTimeout(this.timeout);
 		this.timeout = setTimeout(() => {
 			const input = (target as HTMLInputElement).value.trim();
 
-			this.searchInput = input ? sanitize(input) : null;
+			this.searchInput = input ? sanitize(input) : '';
 
 			if (input && this.clearBtn) this.clearBtn.hidden = false;
 			else if (this.clearBtn) this.clearBtn.hidden = true;
@@ -288,22 +259,14 @@ class Suggestify {
 		}, 250);
 	};
 
-	/**
-	 * @description Deletes results items on blur
-	 * @returns void
-	 */
 	async request(search: string | null): Promise<Result> {
-		const cacheKey = JSON.stringify(search);
+		const query = search ? search : null;
+		const cacheKey = JSON.stringify(query);
 		if (this.cache[cacheKey]) return this.cache[cacheKey];
 
-		const options = {
-			method: 'POST',
-			body: JSON.stringify({
-				search,
-			}),
-		};
+		const url = `${this.engine}${query ? `?q=${query}` : ''}`;
 
-		const response: Result = await fetch(this.engine, options).then((response) => response.json());
+		const response: Result = await fetch(url).then((response) => response.json());
 		this.cache[cacheKey] = response;
 
 		return response;
