@@ -1,7 +1,7 @@
 import Suggestify from './suggestify';
 
 new Suggestify('#suggestify', {
-	engine: 'http://localhost:3001/api/search',
+	engine: 'http://localhost:3001/api/suggestions',
 	class: 'suggestify',
 	blur: true,
 	instant: false,

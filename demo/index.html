@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Suggestify</title>
 		<link href="style.css" rel="stylesheet" />
-		<link href="https://suggestify-engine.maxvanderschee.nl/api/search" rel="preconnect" />
+		<link href="https://suggestify-engine.maxvanderschee.nl/api/suggestions" rel="preconnect" />
 		<style>
 			body,
 			html {
@@ -115,7 +115,7 @@
 			import Suggestify from './suggestify.esm.js';
 
 			new Suggestify('#suggestify', {
-				engine: 'https://suggestify-engine.maxvanderschee.nl/api/search',
+				engine: 'https://suggestify-engine.maxvanderschee.nl/api/suggestions',
 				class: 'suggestify',
 				url: '?q=',
 			});
