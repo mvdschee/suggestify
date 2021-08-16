@@ -26,11 +26,9 @@ module.exports = {
 			],
 			output: {
 				banner: `/*!
-* @project      ${pkg.name}
-* @author      	${pkg.author}
-* @build        ${Date.now()}
-* @release      ${pkg.version}
-* @copyright    Copyright (c) 2021 ${pkg.author}
+* ${pkg.name} v${pkg.version}
+* (c) 2021 ${pkg.author}
+* @license MIT
 */`,
 			},
 		},
