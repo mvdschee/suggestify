@@ -295,6 +295,7 @@ class Suggestify {
 				const li = document.createElement('li');
 				const a = document.createElement('a');
 				const item = result.items[i];
+				const itemId = `${this.class}-item-${nanoid(6)}`;
 
 				setAttributes(a, {
 					class: `${this.class}-link`,
@@ -313,7 +314,7 @@ class Suggestify {
 					a.innerHTML = text;
 				} else a.textContent = item;
 
-				li.id = item.replace(' ', '_');
+				li.id = itemId;
 
 				li.appendChild(a);
 				this.listItems.push(li);

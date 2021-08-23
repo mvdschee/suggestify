@@ -1,10 +1,10 @@
 import Suggestify from './suggestify';
 
 new Suggestify('#suggestify', {
-	engine: 'http://localhost:3001/api/suggestions',
+	engine: 'https://suggestify-engine.maxvanderschee.nl/api/suggestions',
 	class: 'suggestify',
-	blur: true,
-	instant: false,
+	blur: false,
+	instant: true,
 	icon: true,
 	url: '?q=',
 });
