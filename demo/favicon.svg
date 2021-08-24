@@ -1,1 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M21.71,20.29,18,16.61A9,9,0,1,0,16.61,18l3.68,3.68a1,1,0,0,0,1.42,0A1,1,0,0,0,21.71,20.29ZM11,18a7,7,0,1,1,7-7A7,7,0,0,1,11,18Z"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" clip-rule="evenodd" viewBox="0 0 540 540">
+  <path fill="none" d="M0 0h540v540H0z"/>
+  <path fill="url(#suggestify_1)" d="M279.785 508.417c58.253-17.431 91.53-78.421 74.267-136.113l-31.279-104.531-105.546 31.583c-58.252 17.431-91.53 78.421-74.266 136.113 17.263 57.692 78.572 90.379 136.824 72.948z"/>
+  <path fill="url(#suggestify_2)" d="M260.215 31.583c-58.253 17.431-91.53 78.421-74.267 136.113l31.279 104.531 105.546-31.583c58.252-17.431 91.53-78.421 74.266-136.113-17.263-57.692-78.572-90.379-136.824-72.948z"/>
+  <defs>
+    <linearGradient id="suggestify_1" x1="0" x2="1" y1="0" y2="0" gradientTransform="rotate(118.217 80.833 230.173) scale(261.96)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0870d4"/>
+      <stop offset="1" stop-color="#0032d1"/>
+    </linearGradient>
+    <linearGradient id="suggestify_2" x1="0" x2="1" y1="0" y2="0" gradientTransform="rotate(-59.4 345.216 -55.282) scale(262.029)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#04c6e9"/>
+      <stop offset="1" stop-color="#2cddd8"/>
+    </linearGradient>
+  </defs>
+</svg>
+

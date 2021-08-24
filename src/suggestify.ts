@@ -284,7 +284,7 @@ class Suggestify {
 
 	createResultList(result: Result): void {
 		this.root!.classList.add('expanded');
-		this.list!.setAttribute('aria-expanded', 'true');
+		this.input!.setAttribute('aria-expanded', 'true');
 		this.input!.setAttribute('aria-activedescendant', '');
 
 		// create banner
