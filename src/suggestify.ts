@@ -27,7 +27,7 @@ export interface Result {
 
 class Suggestify {
 	// options
-	private engine: string;
+	private engine: string | undefined;
 	private class: string;
 	private url: string;
 	private blur: boolean;
@@ -61,7 +61,7 @@ class Suggestify {
 		this.instant = options.instant !== undefined ? options.instant : false;
 		this.icon = options.icon !== undefined ? options.icon : true;
 		this.t = options.translations || null;
-		this.engine = options.engine || '/api/search';
+		this.engine = options.engine;
 
 		this.initialize();
 	}
@@ -72,17 +72,19 @@ class Suggestify {
 
 		this.initializeDOM();
 
-		this.input.addEventListener('input', this.searchInputHandler, { passive: true });
-		this.input.addEventListener('click', this.inputSelected, { passive: true });
 		this.input.addEventListener('keydown', this.keyHandler, { passive: true });
+		this.input.addEventListener('input', this.searchInputHandler, { passive: true });
 
 		this.clearBtn && this.clearBtn.addEventListener('click', this.clearInput, { passive: true });
 		this.submitBtn && this.submitBtn.addEventListener('click', this.directSearch, { passive: true });
 
-		if (this.blur) this.input.addEventListener('blur', this.handleBlur, { passive: true });
+		if (this.engine) {
+			this.input.addEventListener('click', this.inputSelected, { passive: true });
+			if (this.blur) this.input.addEventListener('blur', this.handleBlur, { passive: true });
 
-		if (this.instant) this.autoSuggest();
-		else this.input.addEventListener('mouseover', this.autoSuggest, { once: true, passive: true });
+			if (this.instant) this.autoSuggest();
+			else this.input.addEventListener('mouseover', this.autoSuggest, { once: true, passive: true });
+		}
 	}
 
 	initializeDOM() {
@@ -95,15 +97,10 @@ class Suggestify {
 		// input
 		setAttributes(this.input!, {
 			class: `${this.class}-input`,
-			role: 'combobox',
 			autocomplete: 'off',
 			autocapitalize: 'off',
 			autocorrect: 'off',
 			spellcheck: 'off',
-			'aria-autocomplete': 'list',
-			'aria-haspopup': 'listbox',
-			'aria-expanded': 'false',
-			'aria-owns': listId,
 		});
 
 		this.searchInput = this.input!.value;
@@ -134,16 +131,26 @@ class Suggestify {
 		// button submit
 		this.submitBtn!.className = `${this.class}-submit`;
 
-		// list
-		this.list = document.createElement('ul');
+		if (this.engine) {
+			setAttributes(this.input!, {
+				role: 'combobox',
+				'aria-autocomplete': 'list',
+				'aria-haspopup': 'listbox',
+				'aria-expanded': 'false',
+				'aria-owns': listId,
+			});
 
-		setAttributes(this.list, {
-			id: listId,
-			class: `${this.class}-results`,
-			role: 'listbox',
-		});
+			// list
+			this.list = document.createElement('ul');
 
-		this.root?.appendChild(this.list);
+			setAttributes(this.list, {
+				id: listId,
+				class: `${this.class}-results`,
+				role: 'listbox',
+			});
+
+			this.root?.appendChild(this.list);
+		}
 	}
 
 	handleBlur = (): void => {
@@ -180,36 +187,40 @@ class Suggestify {
 	};
 
 	selectItemUp = (): void => {
-		const total = this.listItems.length - 1;
-		const current = this.listItems[this.selectedIndex];
+		if (this.listItems.length) {
+			const total = this.listItems.length - 1;
+			const current = this.listItems[this.selectedIndex];
 
-		if (current) current.classList.remove('selected');
+			if (current) current.classList.remove('selected');
 
-		if (this.selectedIndex <= 0) this.selectedIndex = total;
-		else this.selectedIndex--;
+			if (this.selectedIndex <= 0) this.selectedIndex = total;
+			else this.selectedIndex--;
 
-		const prev = this.listItems[this.selectedIndex];
+			const prev = this.listItems[this.selectedIndex];
 
-		if (prev) {
-			this.input!.setAttribute('aria-activedescendant', prev.id);
-			prev.classList.add('selected');
+			if (prev) {
+				this.input!.setAttribute('aria-activedescendant', prev.id);
+				prev.classList.add('selected');
+			}
 		}
 	};
 
 	selectItemDown = (): void => {
-		const total = this.listItems.length - 1;
-		const current = this.listItems[this.selectedIndex];
+		if (this.listItems.length) {
+			const total = this.listItems.length - 1;
+			const current = this.listItems[this.selectedIndex];
 
-		if (current) current.classList.remove('selected');
+			if (current) current.classList.remove('selected');
 
-		if (this.selectedIndex === total) this.selectedIndex = 0;
-		else this.selectedIndex++;
+			if (this.selectedIndex === total) this.selectedIndex = 0;
+			else this.selectedIndex++;
 
-		const next = this.listItems[this.selectedIndex];
+			const next = this.listItems[this.selectedIndex];
 
-		if (next) {
-			this.input!.setAttribute('aria-activedescendant', next.id);
-			next.classList.add('selected');
+			if (next) {
+				this.input!.setAttribute('aria-activedescendant', next.id);
+				next.classList.add('selected');
+			}
 		}
 	};
 
@@ -248,14 +259,15 @@ class Suggestify {
 			if (input && this.clearBtn) this.clearBtn.hidden = false;
 			else if (this.clearBtn) this.clearBtn.hidden = true;
 
-			this.request(this.searchInput)
-				.then((response) => {
-					this.deleteResultList();
-					this.createResultList(response);
-				})
-				.catch((e: Error) => {
-					throw new Error(e.message);
-				});
+			if (this.engine)
+				this.request(this.searchInput)
+					.then((response) => {
+						this.deleteResultList();
+						this.createResultList(response);
+					})
+					.catch((e: Error) => {
+						throw new Error(e.message);
+					});
 		}, 250);
 	};
 
@@ -340,12 +352,14 @@ class Suggestify {
 	}
 
 	deleteResultList = (): void => {
-		this.root!.classList.remove('expanded');
-		this.input!.setAttribute('aria-expanded', 'false');
-		this.input!.setAttribute('aria-activedescendant', '');
-		this.list!.innerHTML = '';
-		this.listItems = [];
-		this.selectedIndex = -1;
+		if (this.list) {
+			this.root!.classList.remove('expanded');
+			this.input!.setAttribute('aria-expanded', 'false');
+			this.input!.setAttribute('aria-activedescendant', '');
+			this.list!.innerHTML = '';
+			this.listItems = [];
+			this.selectedIndex = -1;
+		}
 	};
 }
 
