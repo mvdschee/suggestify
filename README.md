@@ -2,7 +2,7 @@
 
 # 🕵 Suggestify
 
-**Fully accessible search box with suggestions (Suggestions served by serverless function)**
+**Fully accessible search with suggestions (Suggestions served by serverless function)**
 
 Please note: this project is a personal project I made available and will probably keep changing things to my liking or personal usage. Also, the serverless function with the suggestion logic is not included; I'm working on it and want to keep it for myself for now :)
 
@@ -58,7 +58,7 @@ new Suggestify('#sugestify', {
 	// Class to add to elements
 	class: 'my-class', // default: suggestify
 
-	// Remove suggestions if user clicks outside search box
+	// Remove suggestions if user clicks outside search
 	blur: true, // default: true
 
 	// Add <i> in button element for custom icon styling
