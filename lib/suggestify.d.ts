@@ -6,6 +6,11 @@ export interface Options {
     icon?: boolean;
     instant?: boolean;
     translations?: Translations;
+    onComplete?: ({ value, success }: OnCompleteObject) => Promise<boolean>;
+}
+export interface OnCompleteObject {
+    value: string;
+    success: 'HIT' | 'MISS';
 }
 export interface Translations {
     suggestions: string;
@@ -27,6 +32,7 @@ declare class Suggestify {
     private instant;
     private t;
     private icon;
+    private onComplete;
     private root;
     private input?;
     private clearBtn?;
@@ -49,9 +55,25 @@ declare class Suggestify {
     keyHandler: ({ key }: KeyboardEvent) => void;
     autoSuggest: () => void;
     searchInputHandler: ({ target }: Event) => void;
+    /**
+     * @description Function to call the server with build in caching for search results
+     */
     request(search: string | null): Promise<Result>;
+    /**
+     * @description Create a banner with a message based on the 3 states
+     */
     banner: (type: string) => void;
+    linkHandler: (e: Event, result: string) => void;
+    /**
+     * @description Create list items which has 3 states
+     * - `empty` create banner with message and search input as item
+     * - `results` create banner with message and 7 results
+     * - `suggestions` create banner with inital 7 pre-set results
+     */
     createResultList(result: Result): void;
+    /**
+     * @description Delete all items in the list and reset values to unselected state
+     */
     deleteResultList: () => void;
 }
 export default Suggestify;

@@ -8,6 +8,12 @@ export interface Options {
 	icon?: boolean;
 	instant?: boolean;
 	translations?: Translations;
+	onComplete?: ({ value, success }: OnCompleteObject) => Promise<boolean>;
+}
+
+export interface OnCompleteObject {
+	value: string;
+	success: 'HIT' | 'MISS';
 }
 
 export interface Translations {
@@ -34,6 +40,7 @@ class Suggestify {
 	private instant: boolean;
 	private t: Translations | null;
 	private icon: boolean;
+	private onComplete: Options['onComplete'];
 	// Elements
 	private root: HTMLElement | null;
 	private input?: HTMLInputElement | null;
@@ -62,6 +69,7 @@ class Suggestify {
 		this.icon = options.icon !== undefined ? options.icon : true;
 		this.t = options.translations || null;
 		this.engine = options.engine;
+		this.onComplete = options.onComplete;
 
 		this.initialize();
 	}
@@ -180,10 +188,29 @@ class Suggestify {
 	};
 
 	directSearch = (): void => {
+		let result = '';
+
 		if (this.selectedIndex !== -1) {
 			const item = this.listItems[this.selectedIndex];
-			window.location.href = `${this.url}${item.id.replace('_', ' ')}`;
-		} else if (this.searchInput) window.location.href = `${this.url}${this.searchInput}`;
+			result = item.title;
+		} else if (this.searchInput) result = this.searchInput.toLowerCase();
+
+		if (this.onComplete && result) {
+			const item = this.listItems.find((item) => item.title === result);
+			const success = item ? 'HIT' : 'MISS';
+
+			console.log(success);
+
+			this.onComplete({ value: result, success })
+				.then((e) => {
+					console.log(e);
+
+					window.location.href = `${this.url}${result}`;
+				})
+				.catch((e) => {
+					console.log(e);
+				});
+		} else window.location.href = `${this.url}${result}`;
 	};
 
 	selectItemUp = (): void => {
@@ -271,6 +298,9 @@ class Suggestify {
 		}, 250);
 	};
 
+	/**
+	 * @description Function to call the server with build in caching for search results
+	 */
 	async request(search: string | null): Promise<Result> {
 		const query = search ? search : null;
 		const cacheKey = JSON.stringify(query);
@@ -284,6 +314,9 @@ class Suggestify {
 		return response;
 	}
 
+	/**
+	 * @description Create a banner with a message based on the 3 states
+	 */
 	banner = (type: string): void => {
 		const banner = document.createElement('li');
 		banner.className = `${this.class}-banner`;
@@ -294,6 +327,22 @@ class Suggestify {
 		if (type !== 'results') this.list!.appendChild(banner);
 	};
 
+	linkHandler = (e: Event, result: string) => {
+		e.preventDefault();
+
+		if (this.onComplete) {
+			this.onComplete({ value: result, success: 'HIT' }).then(() => {
+				window.location.href = `${this.url}${result}`;
+			});
+		} else window.location.href = `${this.url}${result}`;
+	};
+
+	/**
+	 * @description Create list items which has 3 states
+	 * - `empty` create banner with message and search input as item
+	 * - `results` create banner with message and 7 results
+	 * - `suggestions` create banner with inital 7 pre-set results
+	 */
 	createResultList(result: Result): void {
 		this.root!.classList.add('expanded');
 		this.input!.setAttribute('aria-expanded', 'true');
@@ -306,6 +355,7 @@ class Suggestify {
 			for (let i = 0; i < result.items.length; i++) {
 				const li = document.createElement('li');
 				const a = document.createElement('a');
+
 				const item = result.items[i];
 				const itemId = `${this.class}-item-${nanoid(6)}`;
 
@@ -313,6 +363,8 @@ class Suggestify {
 					class: `${this.class}-link`,
 					href: `${this.url}${item}`,
 				});
+
+				a.addEventListener('click', (e) => this.linkHandler(e, item), { passive: false });
 
 				if (result.type === 'results') {
 					const words = this.searchInput ? this.searchInput.split(' ') : [];
@@ -327,6 +379,7 @@ class Suggestify {
 				} else a.textContent = item;
 
 				li.id = itemId;
+				li.title = item;
 
 				li.appendChild(a);
 				this.listItems.push(li);
@@ -339,8 +392,10 @@ class Suggestify {
 				class: `${this.class}-link`,
 				href: `${this.url}${this.searchInput}`,
 			});
-
+			a.addEventListener('click', (e) => this.linkHandler(e, this.searchInput), { passive: false });
 			a.textContent = this.searchInput;
+
+			li.title = this.searchInput;
 
 			li.appendChild(a);
 			this.listItems.push(li);
@@ -351,6 +406,9 @@ class Suggestify {
 		}
 	}
 
+	/**
+	 * @description Delete all items in the list and reset values to unselected state
+	 */
 	deleteResultList = (): void => {
 		if (this.list) {
 			this.root!.classList.remove('expanded');
