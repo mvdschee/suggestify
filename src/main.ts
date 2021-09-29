@@ -3,18 +3,25 @@ import Suggestify from './suggestify';
 const url = 'https://suggestify-engine.maxvanderschee.nl';
 
 const onComplete = async ({ value, success }) => {
+	const controller = new AbortController();
+	const signal = controller.signal;
+
 	try {
+		setTimeout(() => {
+			controller.abort();
+			return true;
+		}, 10);
+
 		await fetch(`${url}/api/events`, {
 			method: 'POST',
+			signal,
 			body: JSON.stringify({
 				value,
 				success,
 			}),
 		});
-
-		return true;
 	} catch (error) {
-		return true;
+		return false;
 	}
 };
 

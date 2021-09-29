@@ -199,17 +199,9 @@ class Suggestify {
 			const item = this.listItems.find((item) => item.title === result);
 			const success = item ? 'HIT' : 'MISS';
 
-			console.log(success);
-
-			this.onComplete({ value: result, success })
-				.then((e) => {
-					console.log(e);
-
-					window.location.href = `${this.url}${result}`;
-				})
-				.catch((e) => {
-					console.log(e);
-				});
+			this.onComplete({ value: result, success }).then(() => {
+				window.location.href = `${this.url}${result}`;
+			});
 		} else window.location.href = `${this.url}${result}`;
 	};
 
