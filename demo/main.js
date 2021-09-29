@@ -1,4 +1,4 @@
-import Suggestify from './suggestify';
+import Suggestify from './suggestify.esm.js';
 
 const url = 'https://suggestify-engine.maxvanderschee.nl';
 
