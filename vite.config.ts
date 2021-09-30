@@ -1,8 +1,9 @@
+import { defineConfig } from 'vite';
 import path from 'path';
 import copy from 'rollup-plugin-copy';
 import pkg from './package.json';
 
-module.exports = {
+module.exports = defineConfig({
 	build: {
 		target: 'esnext',
 		emptyOutDir: false,
@@ -33,4 +34,4 @@ module.exports = {
 			},
 		},
 	},
-};
+});
