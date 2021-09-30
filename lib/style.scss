@@ -1,5 +1,9 @@
 // input styling without waiting for JS to load
 #suggestify {
+	max-width: 500px;
+	position: relative;
+	width: 100%;
+
 	> input {
 		box-sizing: border-box;
 		font-size: 16px;
@@ -30,7 +34,6 @@
 		cursor: pointer;
 		position: absolute;
 		top: 0;
-		right: 10px;
 		border: none;
 		padding: 0;
 		width: 36px;
@@ -41,15 +44,9 @@
 			outline: 2px dotted rgba(0, 0, 0, 0.3);
 		}
 	}
-}
-
-.suggestify {
-	max-width: 500px;
-	position: relative;
-	width: 100%;
 
 	&.expanded {
-		input {
+		> input {
 			border-radius: 25px 25px 0 0;
 		}
 
@@ -59,7 +56,7 @@
 	}
 }
 
-button.suggestify-clear {
+.suggestify-clear {
 	right: 45px;
 
 	> i {
@@ -93,6 +90,8 @@ button.suggestify-clear {
 }
 
 .suggestify-submit {
+	right: 10px;
+
 	> i {
 		display: block;
 		box-sizing: border-box;
