@@ -6,10 +6,11 @@ import pkg from './package.json';
 module.exports = defineConfig({
 	build: {
 		target: 'esnext',
+		minify: 'terser',
 		emptyOutDir: false,
 		lib: {
 			entry: path.resolve(__dirname, 'src/suggestify.ts'),
-			formats: ['esm', 'umd'],
+			formats: ['es', 'umd'],
 			name: 'suggestify',
 		},
 		outDir: './lib',
