@@ -1,6 +1,6 @@
 import Suggestify from './suggestify';
 
-const url = 'https://suggestify-engine.maxvanderschee.nl/api';
+const url = '/api';
 
 const onComplete = async ({ value, success }) => {
 	const controller = new AbortController();
