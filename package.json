@@ -1,7 +1,7 @@
 {
 	"name": "suggestify",
 	"description": "Fully accessible search with suggestions",
-	"version": "1.2.4",
+	"version": "1.2.5",
 	"author": "Max van der Schee",
 	"license": "MIT",
 	"repository": {
@@ -24,7 +24,7 @@
 		"vite": "^2.6.2"
 	},
 	"dependencies": {
-		"nanoid": "^3.1.28"
+		"nanoid": "^3.1.31"
 	},
 	"engines": {
 		"node": ">= 12.x"
