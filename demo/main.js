@@ -31,7 +31,7 @@ fetch(url, {
 });
 
 new Suggestify('#suggestify', {
-	engine: `${url}/suggestions`,
+	engine: `/api/suggestions`,
 	class: 'suggestify',
 	blur: true,
 	instant: false,
