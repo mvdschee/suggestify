@@ -1,4 +1,4 @@
-const SuggestifyEngine = require('suggestify-engine');
+const SuggestifyEngine = require('@suggestify/engine');
 const rateLimit = require('lambda-rate-limiter')({
 	interval: 1000 * 60, // Our rate-limit interval, 1 minute
 	uniqueTokenPerInterval: 500,

@@ -1,6 +1,6 @@
 import Suggestify from './suggestify.es.js';
 
-const url = '/api';
+const url = 'https://events.suggestify.org';
 
 const onComplete = async ({ value, success }) => {
 	const controller = new AbortController();
@@ -12,18 +12,23 @@ const onComplete = async ({ value, success }) => {
 			return true;
 		}, 100);
 
-		await fetch(`${url}/events`, {
+		await fetch(url, {
 			method: 'POST',
 			signal,
 			body: JSON.stringify({
 				value,
 				success,
+				team: 'example',
 			}),
 		});
 	} catch (error) {
 		return false;
 	}
 };
+
+fetch(url, {
+	method: 'OPTIONS',
+});
 
 new Suggestify('#suggestify', {
 	engine: `${url}/suggestions`,
